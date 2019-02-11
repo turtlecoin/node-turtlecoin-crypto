@@ -30,20 +30,55 @@
         "src/turtlecoin-crypto.cpp"
       ],
       "cflags!": [
-        "-fno-exceptions"
-      ],
-      "cflags_cc!": [
-        "-fno-exceptions",
-        "-fno-rtti"
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpointer-arith",
+        "-Wvla",
+        "-Wwrite-strings",
+        "-Wno-error=extra",
+        "-Wno-error=unused-function",
+        "-Wno-error=sign-compare",
+        "-Wno-error=strict-aliasing",
+        "-Wno-error=type-limits",
+        "-Wno-error=unused-parameter",
+        "-Wno-error=unused-variable",
+        "-Wno-error=undef",
+        "-Wno-error=uninitialized",
+        "-Wno-error=unused-result",
+        "-Wlogical-op",
+        "-Wno-error=maybe-uninitialized",
+        "-Wno-error=clobbered",
+        "-Wno-error=unused-but-set-variable",
+        "-Waggregate-return",
+        "-Wnested-externs",
+        "-Wold-style-definition",
+        "-Wstrict-prototypes"
       ],
       "cflags_cc": [
         "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Wpointer-arith",
+        "-Wvla",
+        "-Wwrite-strings",
+        "-Wno-error=extra",
+        "-Wno-error=unused-function",
+        "-Wno-error=sign-compare",
+        "-Wno-error=strict-aliasing",
+        "-Wno-error=type-limits",
+        "-Wno-unused-parameter",
+        "-Wno-error=unused-variable",
+        "-Wno-error=undef",
+        "-Wno-error=uninitialized",
+        "-Wno-error=unused-result",
+        "-Wlogical-op",
+        "-Wno-error=maybe-uninitialized",
+        "-Wno-error=clobbered",
+        "-Wno-error=unused-but-set-variable",
+        "-Wno-reorder",
         "-Wno-missing-field-initializers",
-        "-Wno-unused-function",
-        "-Wno-unused-const-variable",
-        "-Wno-unused-private-field",
-        "-Wno-unused-function",
-        "-Wno-unused-but-set-variable"
+        "-fexceptions"
       ],
       "conditions": [
         [
@@ -67,7 +102,7 @@
                     "RuntimeTypeInfo": "false",
                     "ExceptionHandling": "0",
                     "AdditionalOptions": [
-                      "/std:c++17 /MP /EHsc -D_WIN32_WINNT=0x0501"
+                      "/std:c++17 /EHsc -D_WIN32_WINNT=0x0501 /bigobj /MP /W3 /D_CRT_SECURE_NO_WARNINGS /wd4996 /wd4345 /D_WIN32_WINNT=0x0600 /DWIN32_LEAN_AND_MEAN /DGTEST_HAS_TR1_TUPLE=0 /D_VARIADIC_MAX=8 /D__SSE4_1__"
                     ]
                   },
                   "VCLibrarianTool": {
@@ -85,6 +120,11 @@
                 }
               }
             }
+          },
+          {
+            "defines": [
+              "NO_AES"
+            ]
           }
         ]
       ]

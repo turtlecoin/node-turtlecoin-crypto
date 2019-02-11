@@ -1,11 +1,11 @@
+image: 'Visual Studio 2017'
 environment:
-  nodejs_version: "8"
+  nodejs_version: '8'
 
-# Install scripts. (runs after repo cloning)
 install:
-  # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
-  # install modules
+  - ps: npm install -g windows-build-tools --vs2015
+  - npm config -g set msvs_version 2015
   - npm install
   - npm test
 
