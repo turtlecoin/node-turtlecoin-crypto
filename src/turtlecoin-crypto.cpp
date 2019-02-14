@@ -164,8 +164,14 @@ void generateSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
             Common::podFromHex(secretKey, c_secret_key);
 
             Crypto::Signature c_sig;
-            Crypto::generate_signature(c_prefixHash, c_public_key,
-                                       c_secret_key, c_sig);
+            try
+            {
+                Crypto::generate_signature(c_prefixHash, c_public_key,
+                                           c_secret_key, c_sig);
+            }
+            catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             std::string c_result = Common::podToHex(c_sig);
             v8::Local < v8::String > returnValue =
@@ -346,8 +352,14 @@ void generateKeyImage(const Nan::FunctionCallbackInfo < v8::Value > &info)
             Common::podFromHex(secretKey, c_secret_key);
 
             Crypto::KeyImage c_key_image;
-            Crypto::generate_key_image(c_public_key, c_secret_key,
-                                       c_key_image);
+            try
+            {
+                Crypto::generate_key_image(c_public_key, c_secret_key,
+                                           c_key_image);
+            }
+            catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             std::string result = Common::podToHex(c_key_image);
 
@@ -379,7 +391,13 @@ void cn_fast_hash(const Nan::FunctionCallbackInfo < v8::Value > &info)
             const BinaryArray & rawData = Common::fromHex(data);
 
             Crypto::Hash c_hash = Crypto::Hash();
-            Crypto::cn_fast_hash(rawData.data(), rawData.size(), c_hash);
+            try
+            {
+                Crypto::cn_fast_hash(rawData.data(), rawData.size(),
+                                     c_hash);
+            } catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             hash = Common::podToHex(c_hash);
             v8::Local < v8::String > returnValue =
@@ -508,8 +526,14 @@ void deriveSecretKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
             Common::podFromHex(secretKey, c_secret_key);
 
             Crypto::SecretKey c_result;
-            Crypto::derive_secret_key(c_derivation, outputIndex,
-                                      c_secret_key, c_result);
+            try
+            {
+                Crypto::derive_secret_key(c_derivation, outputIndex,
+                                          c_secret_key, c_result);
+            }
+            catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             std::string result = Common::podToHex(c_result);
             v8::Local < v8::String > returnValue =
@@ -596,8 +620,14 @@ void cn_turtle_lite_slow_hash_v0(const Nan::FunctionCallbackInfo <
             const BinaryArray & rawData = Common::fromHex(data);
 
             Crypto::Hash c_hash = Crypto::Hash();
-            Crypto::cn_turtle_lite_slow_hash_v0(rawData.data(),
-                                                rawData.size(), c_hash);
+            try
+            {
+                Crypto::cn_turtle_lite_slow_hash_v0(rawData.data(),
+                                                    rawData.size(),
+                                                    c_hash);
+            } catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             hash = Common::podToHex(c_hash);
             v8::Local < v8::String > returnValue =
@@ -629,8 +659,14 @@ void cn_turtle_lite_slow_hash_v1(const Nan::FunctionCallbackInfo <
             const BinaryArray & rawData = Common::fromHex(data);
 
             Crypto::Hash c_hash = Crypto::Hash();
-            Crypto::cn_turtle_lite_slow_hash_v1(rawData.data(),
-                                                rawData.size(), c_hash);
+            try
+            {
+                Crypto::cn_turtle_lite_slow_hash_v1(rawData.data(),
+                                                    rawData.size(),
+                                                    c_hash);
+            } catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             hash = Common::podToHex(c_hash);
             v8::Local < v8::String > returnValue =
@@ -661,8 +697,14 @@ void cn_turtle_lite_slow_hash_v2(const Nan::FunctionCallbackInfo <
             const BinaryArray & rawData = Common::fromHex(data);
 
             Crypto::Hash c_hash = Crypto::Hash();
-            Crypto::cn_turtle_lite_slow_hash_v2(rawData.data(),
-                                                rawData.size(), c_hash);
+            try
+            {
+                Crypto::cn_turtle_lite_slow_hash_v2(rawData.data(),
+                                                    rawData.size(),
+                                                    c_hash);
+            } catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
 
             hash = Common::podToHex(c_hash);
             v8::Local < v8::String > returnValue =

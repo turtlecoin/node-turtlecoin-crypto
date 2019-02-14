@@ -152,8 +152,7 @@ namespace Crypto {
         struct {
             KeyDerivation derivation;
             char output_index[(sizeof(size_t) * 8 + 6) / 7];
-        }
-        buf;
+        } buf;
 
         char *end = buf.output_index;
 
@@ -172,8 +171,7 @@ namespace Crypto {
         struct {
             KeyDerivation derivation;
             char output_index[(sizeof(size_t) * 8 + 6) / 7 + 32];
-        }
-        buf;
+        } buf;
 
         char *end = buf.output_index;
 

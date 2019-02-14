@@ -2,6 +2,9 @@
   "targets": [
     {
       "target_name": "turtlecoin-crypto",
+      "defines": [
+        "NDEBUG"
+      ],
       "include_dirs": [
         "include",
         "<!(node -e \"require('nan')\")"
