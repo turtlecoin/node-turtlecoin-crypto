@@ -1547,7 +1547,7 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
         VARIANT2_PORTABLE_SHUFFLE_ADD(long_state, j);
         copy_block(&long_state[j], c1);
         xor_blocks(&long_state[j], b);
-        //assert(j == e2i(a, aes_init);
+        assert(j == e2i(a, aes_init));
         VARIANT1_1(&long_state[j]);
         /* Iteration 2 */
         j = e2i(c1, aes_init);
@@ -1562,7 +1562,7 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
         xor_blocks(c1, c2);
         VARIANT1_2(c2 + 8);
         copy_block(&long_state[j], c2);
-        //assert(j == e2i(a, aes_init);
+        assert(j == e2i(a, aes_init));
         if (variant == 2)
         {
             copy_block(b + AES_BLOCK_SIZE, b);
