@@ -1,3 +1,4 @@
+
 /*
  * The blake256_* and blake224_* functions are largely copied from
  * blake256_light.c and blake224_light.c from the BLAKE website:
@@ -129,6 +130,7 @@ void blake256_init(state * S)
 void blake256_update(state * S, const uint8_t * data, uint64_t datalen)
 {
     int left = S->buflen >> 3;
+
     int fill = 64 - left;
 
     if (left && (((datalen >> 3) & 0x3F) >= (unsigned) fill))
@@ -166,7 +168,9 @@ void blake256_update(state * S, const uint8_t * data, uint64_t datalen)
 void blake256_final_h(state * S, uint8_t * digest, uint8_t pa, uint8_t pb)
 {
     uint8_t msglen[8];
+
     uint32_t lo = S->t[0] + S->buflen, hi = S->t[1];
+
     if (lo < (unsigned) S->buflen)
         hi++;
     U32TO8(msglen + 0, hi);
@@ -217,6 +221,7 @@ void blake256_final(state * S, uint8_t * digest)
 void blake256_hash(uint8_t * out, const uint8_t * in, uint64_t inlen)
 {
     state S;
+
     blake256_init(&S);
     blake256_update(&S, in, inlen * 8);
     blake256_final(&S, out);

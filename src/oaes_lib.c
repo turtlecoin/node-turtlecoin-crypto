@@ -1,3 +1,4 @@
+
 /*
  * ---------------------------------------------------------------------------
  * OpenAES License
@@ -700,6 +701,7 @@ oaes_sprintf(char *buf, size_t * buf_len, const uint8_t * data,
              size_t data_len)
 {
     size_t _i, _buf_len_in;
+
     char _temp[4];
 
     if (NULL == buf_len)
@@ -735,7 +737,9 @@ static void oaes_get_seed(char buf[RANDSIZ + 1])
 {
 #if !defined(__FreeBSD__) && !defined(__OpenBSD__)
     struct timeb timer;
+
     struct tm *gmTimer;
+
     char *_test = NULL;
 
     ftime(&timer);
@@ -747,7 +751,9 @@ static void oaes_get_seed(char buf[RANDSIZ + 1])
             timer.millitm, _test + timer.millitm, getpid());
 #else
     struct timeval timer;
+
     struct tm *gmTimer;
+
     char *_test = NULL;
 
     gettimeofday(&timer, NULL);
@@ -767,8 +773,11 @@ static uint32_t oaes_get_seed(void)
 {
 #if !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__ANDROID__)
     struct timeb timer;
+
     struct tm *gmTimer;
+
     char *_test = NULL;
+
     uint32_t _ret = 0;
 
     ftime(&timer);
@@ -781,8 +790,11 @@ static uint32_t oaes_get_seed(void)
         getpid();
 #else
     struct timeval timer;
+
     struct tm *gmTimer;
+
     char *_test = NULL;
+
     uint32_t _ret = 0;
 
     gettimeofday(&timer, NULL);
@@ -832,6 +844,7 @@ static OAES_RET oaes_key_destroy(oaes_key ** key)
 static OAES_RET oaes_key_expand(OAES_CTX * ctx)
 {
     size_t _i, _j;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)
@@ -894,8 +907,11 @@ static OAES_RET oaes_key_expand(OAES_CTX * ctx)
 static OAES_RET oaes_key_gen(OAES_CTX * ctx, size_t key_size)
 {
     size_t _i;
+
     oaes_key *_key = NULL;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
+
     OAES_RET _rc = OAES_RET_SUCCESS;
 
     if (NULL == _ctx)
@@ -955,6 +971,7 @@ OAES_RET oaes_key_gen_256(OAES_CTX * ctx)
 OAES_RET oaes_key_export(OAES_CTX * ctx, uint8_t * data, size_t * data_len)
 {
     size_t _data_len_in;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)
@@ -989,6 +1006,7 @@ OAES_RET
 oaes_key_export_data(OAES_CTX * ctx, uint8_t * data, size_t * data_len)
 {
     size_t _data_len_in;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)
@@ -1018,7 +1036,9 @@ OAES_RET
 oaes_key_import(OAES_CTX * ctx, const uint8_t * data, size_t data_len)
 {
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
+
     OAES_RET _rc = OAES_RET_SUCCESS;
+
     int _key_length;
 
     if (NULL == _ctx)
@@ -1107,6 +1127,7 @@ OAES_RET
 oaes_key_import_data(OAES_CTX * ctx, const uint8_t * data, size_t data_len)
 {
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
+
     OAES_RET _rc = OAES_RET_SUCCESS;
 
     if (NULL == _ctx)
@@ -1164,6 +1185,7 @@ OAES_CTX *oaes_alloc(void)
 #ifdef OAES_HAVE_ISAAC
     {
         ub4 _i = 0;
+
         char _seed[RANDSIZ + 1];
 
         _ctx->rctx = (randctx *) calloc(sizeof(randctx), 1);
@@ -1225,6 +1247,7 @@ OAES_RET
 oaes_set_option(OAES_CTX * ctx, OAES_OPTION option, const void *value)
 {
     size_t _i;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)
@@ -1288,6 +1311,7 @@ static OAES_RET
 oaes_encrypt_block(OAES_CTX * ctx, uint8_t * c, size_t c_len)
 {
     size_t _i, _j;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)
@@ -1409,6 +1433,7 @@ static OAES_RET
 oaes_decrypt_block(OAES_CTX * ctx, uint8_t * c, size_t c_len)
 {
     size_t _i, _j;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)
@@ -1530,10 +1555,13 @@ oaes_encrypt(OAES_CTX * ctx,
              const uint8_t * m, size_t m_len, uint8_t * c, size_t * c_len)
 {
     size_t _i, _j, _c_len_in, _c_data_len;
+
     size_t _pad_len = m_len % OAES_BLOCK_SIZE == 0 ?
         0 : OAES_BLOCK_SIZE - m_len % OAES_BLOCK_SIZE;
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
+
     OAES_RET _rc = OAES_RET_SUCCESS;
+
     uint8_t _flags = _pad_len ? OAES_FLAG_PAD : 0;
 
     if (NULL == _ctx)
@@ -1572,6 +1600,7 @@ oaes_encrypt(OAES_CTX * ctx,
     for (_i = 0; _i < _c_data_len; _i += OAES_BLOCK_SIZE)
     {
         uint8_t _block[OAES_BLOCK_SIZE];
+
         size_t _block_size = min(m_len - _i, OAES_BLOCK_SIZE);
 
         memcpy(_block, c + 2 * OAES_BLOCK_SIZE + _i, _block_size);
@@ -1602,10 +1631,15 @@ oaes_decrypt(OAES_CTX * ctx,
              const uint8_t * c, size_t c_len, uint8_t * m, size_t * m_len)
 {
     size_t _i, _j, _m_len_in;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
+
     OAES_RET _rc = OAES_RET_SUCCESS;
+
     uint8_t _iv[OAES_BLOCK_SIZE];
+
     uint8_t _flags;
+
     OAES_OPTION _options;
 
     if (NULL == ctx)
@@ -1700,6 +1734,7 @@ oaes_decrypt(OAES_CTX * ctx,
     if (_flags & OAES_FLAG_PAD)
     {
         int _is_pad = 1;
+
         size_t _temp = (size_t) m[*m_len - 1];
 
         if (_temp <= 0x00 || _temp > 0x0f)
@@ -1752,6 +1787,7 @@ OAES_API OAES_RET oaes_encryption_round(const uint8_t * key, uint8_t * c)
 OAES_API OAES_RET oaes_pseudo_encrypt_ecb(OAES_CTX * ctx, uint8_t * c)
 {
     size_t _i;
+
     oaes_ctx *_ctx = (oaes_ctx *) ctx;
 
     if (NULL == _ctx)

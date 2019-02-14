@@ -5,6 +5,7 @@
 
 #ifndef __hash_h
 #define __hash_h
+
 /*
 #include "crypto_uint8.h"
 #include "crypto_uint32.h"
@@ -39,7 +40,9 @@ typedef crypto_uint64 uint64_t;
 
 /* NIST API begin */
 typedef unsigned char BitSequence;
+
 typedef unsigned long long DataLength;
+
 typedef struct {
     uint32_t chaining[SIZE512 / sizeof(uint32_t)];      /* actual state */
     uint32_t block_counter1, block_counter2;    /* message block counter(s) */
@@ -53,6 +56,7 @@ typedef struct {
 void Update(hashState*, const BitSequence*, DataLength);
 void Final(hashState*, BitSequence*); */
 void groestl(const BitSequence *, DataLength, BitSequence *);
+
 /* NIST API end   */
 
 /*

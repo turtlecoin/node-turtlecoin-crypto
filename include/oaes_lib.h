@@ -1,3 +1,4 @@
+
 /*
  * ---------------------------------------------------------------------------
  * OpenAES License
@@ -124,6 +125,7 @@ extern "C" {
         OAES_OPTION options;
         uint8_t iv[OAES_BLOCK_SIZE];
     } oaes_ctx;
+
 /*
  * // usage:
  *

@@ -23,8 +23,11 @@ tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash)
     } else
     {
         size_t i, j;
+
         size_t cnt = count - 1;
+
         char (*ints)[HASH_SIZE];
+
         for (i = 1; i < 8 * sizeof(size_t); i <<= 1)
         {
             cnt |= cnt >> i;
@@ -53,7 +56,9 @@ tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash)
 size_t tree_depth(size_t count)
 {
     size_t i;
+
     size_t depth = 0;
+
     assert(count > 0);
     for (i = sizeof(size_t) << 2; i > 0; i >>= 1)
     {
@@ -71,9 +76,13 @@ tree_branch(const char (*hashes)[HASH_SIZE], size_t count,
             char (*branch)[HASH_SIZE])
 {
     size_t i, j;
+
     size_t cnt = 1;
+
     size_t depth = 0;
+
     char (*ints)[HASH_SIZE];
+
     assert(count > 0);
     for (i = sizeof(size_t) << 2; i > 0; i >>= 1)
     {
@@ -116,8 +125,11 @@ tree_hash_from_branch(const char (*branch)[HASH_SIZE], size_t depth,
     } else
     {
         char buffer[2][HASH_SIZE];
+
         int from_leaf = 1;
+
         char *leaf_path, *branch_path;
+
         while (depth > 0)
         {
             --depth;

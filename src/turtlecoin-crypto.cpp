@@ -20,22 +20,22 @@ void generate_keys(const Nan::FunctionCallbackInfo < v8::Value > &info)
     Crypto::generate_keys(pub, sec);
 
     std::string publicKey = Common::toHex(&pub, sizeof(pub));
-    std::string privateKey = Common::toHex(&sec, sizeof(sec));
+    std::string secretKey = Common::toHex(&sec, sizeof(sec));
 
     v8::Local < v8::Object > jsonObject = Nan::New < v8::Object > ();
 
     v8::Local < v8::String > publicKeyProp =
         Nan::New("publicKey").ToLocalChecked();
-    v8::Local < v8::String > privateKeyProp =
-        Nan::New("privateKey").ToLocalChecked();
+    v8::Local < v8::String > secretKeyProp =
+        Nan::New("secretKey").ToLocalChecked();
 
     v8::Local < v8::Value > publicKeyValue =
         Nan::New(publicKey).ToLocalChecked();
-    v8::Local < v8::Value > privateKeyValue =
-        Nan::New(privateKey).ToLocalChecked();
+    v8::Local < v8::Value > secretKeyValue =
+        Nan::New(secretKey).ToLocalChecked();
 
     Nan::Set(jsonObject, publicKeyProp, publicKeyValue);
-    Nan::Set(jsonObject, privateKeyProp, privateKeyValue);
+    Nan::Set(jsonObject, secretKeyProp, secretKeyValue);
 
     info.GetReturnValue().Set(jsonObject);
 }
@@ -116,6 +116,7 @@ void checkSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
             bool success =
                 Crypto::check_signature(c_prefixHash, c_public_key,
                                         c_signature);
+
             v8::Local < v8::Boolean > returnValue = Nan::New(success);
 
             info.GetReturnValue().Set(returnValue);
@@ -247,6 +248,7 @@ void generateRingSignatures(const Nan::FunctionCallbackInfo <
                                                            publicKeys,
                                                            c_transactionSecretKey,
                                                            realOutput);
+
             if (success)
             {
                 v8::Local < v8::Array > sigs =
@@ -275,15 +277,14 @@ void generateRingSignatures(const Nan::FunctionCallbackInfo <
 void generateKeyDerivation(const Nan::FunctionCallbackInfo <
                            v8::Value > &info)
 {
-    std::string privateKey = std::string();
+    std::string secretKey = std::string();
     std::string publicKey = std::string();
 
     if (info.Length() == 2)
     {
         if (info[0]->IsString())
         {
-            privateKey =
-                std::string(*Nan::Utf8String(info[0]->ToString()));
+            secretKey = std::string(*Nan::Utf8String(info[0]->ToString()));
         }
 
         if (info[1]->IsString())
@@ -291,13 +292,13 @@ void generateKeyDerivation(const Nan::FunctionCallbackInfo <
             publicKey = std::string(*Nan::Utf8String(info[1]->ToString()));
         }
 
-        if (!privateKey.empty() && !publicKey.empty())
+        if (!secretKey.empty() && !publicKey.empty())
         {
             Crypto::PublicKey c_public_key;
-            Common::podFromHex(privateKey, c_public_key);
+            Common::podFromHex(publicKey, c_public_key);
 
             Crypto::SecretKey c_secret_key;
-            Common::podFromHex(publicKey, c_secret_key);
+            Common::podFromHex(secretKey, c_secret_key);
 
             Crypto::KeyDerivation derivation;
             bool success =
@@ -423,6 +424,7 @@ void checkKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 void derivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     size_t outputIndex = 0;
+
     std::string derivation = std::string();
     std::string publicKey = std::string();
 
@@ -475,6 +477,7 @@ void derivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 void deriveSecretKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     size_t outputIndex = 0;
+
     std::string derivation = std::string();
     std::string secretKey = std::string();
 
@@ -523,6 +526,7 @@ void deriveSecretKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 void underivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     size_t outputIndex = 0;
+
     std::string derivation = std::string();
     std::string derivedKey = std::string();
 
@@ -655,6 +659,7 @@ void cn_turtle_lite_slow_hash_v2(const Nan::FunctionCallbackInfo <
         if (!data.empty())
         {
             const BinaryArray & rawData = Common::fromHex(data);
+
             Crypto::Hash c_hash = Crypto::Hash();
             Crypto::cn_turtle_lite_slow_hash_v2(rawData.data(),
                                                 rawData.size(), c_hash);

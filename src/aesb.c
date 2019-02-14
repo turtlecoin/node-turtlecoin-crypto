@@ -1,3 +1,4 @@
+
 /*
 ---------------------------------------------------------------------------
 Copyright (c) 1998-2013, Brian Gladman, Worcester, UK. All rights reserved.
@@ -163,7 +164,9 @@ extern "C" {
                                            uint8_t * out,
                                            uint8_t * expandedKey) {
         uint32_t b0[4], b1[4];
+
         const uint32_t *kp = (uint32_t *) expandedKey;
+
         state_in(b0, in);
 
         round(fwd_rnd, b1, b0, kp);

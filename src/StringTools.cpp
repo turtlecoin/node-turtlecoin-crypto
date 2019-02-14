@@ -75,6 +75,7 @@ namespace Common {
 
     std::vector < uint8_t > asBinaryArray(const std::string & data) {
         auto dataPtr = reinterpret_cast < const uint8_t * >(data.data());
+
         return std::vector < uint8_t > (dataPtr, dataPtr + data.size());
     }
 
@@ -136,12 +137,14 @@ namespace Common {
         for (uint64_t i = 0; i < text.size() >> 1; ++i)
         {
             uint8_t value1;
+
             if (!fromHex(text[i << 1], value1))
             {
                 return false;
             }
 
             uint8_t value2;
+
             if (!fromHex(text[(i << 1) + 1], value2))
             {
                 return false;
@@ -180,12 +183,14 @@ namespace Common {
         for (uint64_t i = 0; i < text.size() >> 1; ++i)
         {
             uint8_t value1;
+
             if (!fromHex(text[i << 1], value1))
             {
                 return false;
             }
 
             uint8_t value2;
+
             if (!fromHex(text[(i << 1) + 1], value2))
             {
                 return false;
@@ -246,6 +251,7 @@ namespace Common {
 
     std::string extract(std::string & text, char delimiter) {
         uint64_t delimiterPosition = text.find(delimiter);
+
         std::string subText;
         if (delimiterPosition != std::string::npos)
         {
@@ -263,6 +269,7 @@ namespace Common {
                         uint64_t & offset)
     {
         uint64_t delimiterPosition = text.find(delimiter, offset);
+
         if (delimiterPosition != std::string::npos)
         {
             offset = delimiterPosition + 1;
@@ -277,12 +284,14 @@ namespace Common {
     std::string ipAddressToString(uint32_t ip)
     {
         uint8_t bytes[4];
+
         bytes[0] = ip & 0xFF;
         bytes[1] = (ip >> 8) & 0xFF;
         bytes[2] = (ip >> 16) & 0xFF;
         bytes[3] = (ip >> 24) & 0xFF;
 
         char buf[16];
+
         sprintf(buf, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2],
                 bytes[3]);
 
@@ -292,6 +301,7 @@ namespace Common {
     bool parseIpAddressAndPort(uint32_t & ip, uint32_t & port,
                                const std::string & addr) {
         uint32_t v[4];
+
         uint32_t localPort;
 
         if (sscanf
@@ -319,10 +329,13 @@ namespace Common {
         auto tail = intervalInSeconds;
 
         auto days = tail / (60 * 60 * 24);
+
         tail = tail % (60 * 60 * 24);
         auto hours = tail / (60 * 60);
+
         tail = tail % (60 * 60);
         auto minutes = tail / (60);
+
         tail = tail % (60);
         auto seconds = tail;
 

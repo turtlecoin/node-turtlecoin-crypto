@@ -11,12 +11,19 @@
 /* Predeclarations */
 
 static void fe_mul(fe, const fe, const fe);
+
 static void fe_sq(fe, const fe);
+
 static void fe_tobytes(unsigned char *, const fe);
+
 static void ge_madd(ge_p1p1 *, const ge_p3 *, const ge_precomp *);
+
 static void ge_msub(ge_p1p1 *, const ge_p3 *, const ge_precomp *);
+
 static void ge_p2_0(ge_p2 *);
+
 static void ge_p3_dbl(ge_p1p1 *, const ge_p3 *);
+
 static void fe_divpowm1(fe, const fe, const fe);
 
 /* Common functions */
@@ -24,6 +31,7 @@ static void fe_divpowm1(fe, const fe, const fe);
 static uint64_t load_3(const unsigned char *in)
 {
     uint64_t result;
+
     result = (uint64_t) in[0];
     result |= ((uint64_t) in[1]) << 8;
     result |= ((uint64_t) in[2]) << 16;
@@ -33,6 +41,7 @@ static uint64_t load_3(const unsigned char *in)
 static uint64_t load_4(const unsigned char *in)
 {
     uint64_t result;
+
     result = (uint64_t) in[0];
     result |= ((uint64_t) in[1]) << 8;
     result |= ((uint64_t) in[2]) << 16;
@@ -97,35 +106,65 @@ Postconditions:
 static void fe_add(fe h, const fe f, const fe g)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t g0 = g[0];
+
     int32_t g1 = g[1];
+
     int32_t g2 = g[2];
+
     int32_t g3 = g[3];
+
     int32_t g4 = g[4];
+
     int32_t g5 = g[5];
+
     int32_t g6 = g[6];
+
     int32_t g7 = g[7];
+
     int32_t g8 = g[8];
+
     int32_t g9 = g[9];
+
     int32_t h0 = f0 + g0;
+
     int32_t h1 = f1 + g1;
+
     int32_t h2 = f2 + g2;
+
     int32_t h3 = f3 + g3;
+
     int32_t h4 = f4 + g4;
+
     int32_t h5 = f5 + g5;
+
     int32_t h6 = f6 + g6;
+
     int32_t h7 = f7 + g7;
+
     int32_t h8 = f8 + g8;
+
     int32_t h9 = f9 + g9;
+
     h[0] = h0;
     h[1] = h1;
     h[2] = h2;
@@ -150,35 +189,65 @@ Preconditions: b in {0,1}.
 static void fe_cmov(fe f, const fe g, unsigned int b)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t g0 = g[0];
+
     int32_t g1 = g[1];
+
     int32_t g2 = g[2];
+
     int32_t g3 = g[3];
+
     int32_t g4 = g[4];
+
     int32_t g5 = g[5];
+
     int32_t g6 = g[6];
+
     int32_t g7 = g[7];
+
     int32_t g8 = g[8];
+
     int32_t g9 = g[9];
+
     int32_t x0 = f0 ^ g0;
+
     int32_t x1 = f1 ^ g1;
+
     int32_t x2 = f2 ^ g2;
+
     int32_t x3 = f3 ^ g3;
+
     int32_t x4 = f4 ^ g4;
+
     int32_t x5 = f5 ^ g5;
+
     int32_t x6 = f6 ^ g6;
+
     int32_t x7 = f7 ^ g7;
+
     int32_t x8 = f8 ^ g8;
+
     int32_t x9 = f9 ^ g9;
+
     assert((((b - 1) & ~b) | ((b - 2) & ~(b - 1))) == (unsigned int) -1);
     b = -(int) b;
     x0 &= b;
@@ -212,15 +281,25 @@ h = f
 static void fe_copy(fe h, const fe f)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     h[0] = f0;
     h[1] = f1;
     h[2] = f2;
@@ -238,9 +317,13 @@ static void fe_copy(fe h, const fe f)
 static void fe_invert(fe out, const fe z)
 {
     fe t0;
+
     fe t1;
+
     fe t2;
+
     fe t3;
+
     int i;
 
     fe_sq(t0, z);
@@ -315,6 +398,7 @@ Preconditions:
 static int fe_isnegative(const fe f)
 {
     unsigned char s[32];
+
     fe_tobytes(s, f);
     return s[0] & 1;
 }
@@ -324,6 +408,7 @@ static int fe_isnegative(const fe f)
 static int fe_isnonzero(const fe f)
 {
     unsigned char s[32];
+
     fe_tobytes(s, f);
     return (((int)
              (s[0] | s[1] | s[2] | s[3] | s[4] | s[5] | s[6] | s[7] | s[8]
@@ -370,139 +455,273 @@ With tighter constraints on inputs can squeeze carries into int32.
 static void fe_mul(fe h, const fe f, const fe g)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t g0 = g[0];
+
     int32_t g1 = g[1];
+
     int32_t g2 = g[2];
+
     int32_t g3 = g[3];
+
     int32_t g4 = g[4];
+
     int32_t g5 = g[5];
+
     int32_t g6 = g[6];
+
     int32_t g7 = g[7];
+
     int32_t g8 = g[8];
+
     int32_t g9 = g[9];
+
     int32_t g1_19 = 19 * g1;    /* 1.959375*2^29 */
+
     int32_t g2_19 = 19 * g2;    /* 1.959375*2^30; still ok */
+
     int32_t g3_19 = 19 * g3;
+
     int32_t g4_19 = 19 * g4;
+
     int32_t g5_19 = 19 * g5;
+
     int32_t g6_19 = 19 * g6;
+
     int32_t g7_19 = 19 * g7;
+
     int32_t g8_19 = 19 * g8;
+
     int32_t g9_19 = 19 * g9;
+
     int32_t f1_2 = 2 * f1;
+
     int32_t f3_2 = 2 * f3;
+
     int32_t f5_2 = 2 * f5;
+
     int32_t f7_2 = 2 * f7;
+
     int32_t f9_2 = 2 * f9;
+
     int64_t f0g0 = f0 * (int64_t) g0;
+
     int64_t f0g1 = f0 * (int64_t) g1;
+
     int64_t f0g2 = f0 * (int64_t) g2;
+
     int64_t f0g3 = f0 * (int64_t) g3;
+
     int64_t f0g4 = f0 * (int64_t) g4;
+
     int64_t f0g5 = f0 * (int64_t) g5;
+
     int64_t f0g6 = f0 * (int64_t) g6;
+
     int64_t f0g7 = f0 * (int64_t) g7;
+
     int64_t f0g8 = f0 * (int64_t) g8;
+
     int64_t f0g9 = f0 * (int64_t) g9;
+
     int64_t f1g0 = f1 * (int64_t) g0;
+
     int64_t f1g1_2 = f1_2 * (int64_t) g1;
+
     int64_t f1g2 = f1 * (int64_t) g2;
+
     int64_t f1g3_2 = f1_2 * (int64_t) g3;
+
     int64_t f1g4 = f1 * (int64_t) g4;
+
     int64_t f1g5_2 = f1_2 * (int64_t) g5;
+
     int64_t f1g6 = f1 * (int64_t) g6;
+
     int64_t f1g7_2 = f1_2 * (int64_t) g7;
+
     int64_t f1g8 = f1 * (int64_t) g8;
+
     int64_t f1g9_38 = f1_2 * (int64_t) g9_19;
+
     int64_t f2g0 = f2 * (int64_t) g0;
+
     int64_t f2g1 = f2 * (int64_t) g1;
+
     int64_t f2g2 = f2 * (int64_t) g2;
+
     int64_t f2g3 = f2 * (int64_t) g3;
+
     int64_t f2g4 = f2 * (int64_t) g4;
+
     int64_t f2g5 = f2 * (int64_t) g5;
+
     int64_t f2g6 = f2 * (int64_t) g6;
+
     int64_t f2g7 = f2 * (int64_t) g7;
+
     int64_t f2g8_19 = f2 * (int64_t) g8_19;
+
     int64_t f2g9_19 = f2 * (int64_t) g9_19;
+
     int64_t f3g0 = f3 * (int64_t) g0;
+
     int64_t f3g1_2 = f3_2 * (int64_t) g1;
+
     int64_t f3g2 = f3 * (int64_t) g2;
+
     int64_t f3g3_2 = f3_2 * (int64_t) g3;
+
     int64_t f3g4 = f3 * (int64_t) g4;
+
     int64_t f3g5_2 = f3_2 * (int64_t) g5;
+
     int64_t f3g6 = f3 * (int64_t) g6;
+
     int64_t f3g7_38 = f3_2 * (int64_t) g7_19;
+
     int64_t f3g8_19 = f3 * (int64_t) g8_19;
+
     int64_t f3g9_38 = f3_2 * (int64_t) g9_19;
+
     int64_t f4g0 = f4 * (int64_t) g0;
+
     int64_t f4g1 = f4 * (int64_t) g1;
+
     int64_t f4g2 = f4 * (int64_t) g2;
+
     int64_t f4g3 = f4 * (int64_t) g3;
+
     int64_t f4g4 = f4 * (int64_t) g4;
+
     int64_t f4g5 = f4 * (int64_t) g5;
+
     int64_t f4g6_19 = f4 * (int64_t) g6_19;
+
     int64_t f4g7_19 = f4 * (int64_t) g7_19;
+
     int64_t f4g8_19 = f4 * (int64_t) g8_19;
+
     int64_t f4g9_19 = f4 * (int64_t) g9_19;
+
     int64_t f5g0 = f5 * (int64_t) g0;
+
     int64_t f5g1_2 = f5_2 * (int64_t) g1;
+
     int64_t f5g2 = f5 * (int64_t) g2;
+
     int64_t f5g3_2 = f5_2 * (int64_t) g3;
+
     int64_t f5g4 = f5 * (int64_t) g4;
+
     int64_t f5g5_38 = f5_2 * (int64_t) g5_19;
+
     int64_t f5g6_19 = f5 * (int64_t) g6_19;
+
     int64_t f5g7_38 = f5_2 * (int64_t) g7_19;
+
     int64_t f5g8_19 = f5 * (int64_t) g8_19;
+
     int64_t f5g9_38 = f5_2 * (int64_t) g9_19;
+
     int64_t f6g0 = f6 * (int64_t) g0;
+
     int64_t f6g1 = f6 * (int64_t) g1;
+
     int64_t f6g2 = f6 * (int64_t) g2;
+
     int64_t f6g3 = f6 * (int64_t) g3;
+
     int64_t f6g4_19 = f6 * (int64_t) g4_19;
+
     int64_t f6g5_19 = f6 * (int64_t) g5_19;
+
     int64_t f6g6_19 = f6 * (int64_t) g6_19;
+
     int64_t f6g7_19 = f6 * (int64_t) g7_19;
+
     int64_t f6g8_19 = f6 * (int64_t) g8_19;
+
     int64_t f6g9_19 = f6 * (int64_t) g9_19;
+
     int64_t f7g0 = f7 * (int64_t) g0;
+
     int64_t f7g1_2 = f7_2 * (int64_t) g1;
+
     int64_t f7g2 = f7 * (int64_t) g2;
+
     int64_t f7g3_38 = f7_2 * (int64_t) g3_19;
+
     int64_t f7g4_19 = f7 * (int64_t) g4_19;
+
     int64_t f7g5_38 = f7_2 * (int64_t) g5_19;
+
     int64_t f7g6_19 = f7 * (int64_t) g6_19;
+
     int64_t f7g7_38 = f7_2 * (int64_t) g7_19;
+
     int64_t f7g8_19 = f7 * (int64_t) g8_19;
+
     int64_t f7g9_38 = f7_2 * (int64_t) g9_19;
+
     int64_t f8g0 = f8 * (int64_t) g0;
+
     int64_t f8g1 = f8 * (int64_t) g1;
+
     int64_t f8g2_19 = f8 * (int64_t) g2_19;
+
     int64_t f8g3_19 = f8 * (int64_t) g3_19;
+
     int64_t f8g4_19 = f8 * (int64_t) g4_19;
+
     int64_t f8g5_19 = f8 * (int64_t) g5_19;
+
     int64_t f8g6_19 = f8 * (int64_t) g6_19;
+
     int64_t f8g7_19 = f8 * (int64_t) g7_19;
+
     int64_t f8g8_19 = f8 * (int64_t) g8_19;
+
     int64_t f8g9_19 = f8 * (int64_t) g9_19;
+
     int64_t f9g0 = f9 * (int64_t) g0;
+
     int64_t f9g1_38 = f9_2 * (int64_t) g1_19;
+
     int64_t f9g2_19 = f9 * (int64_t) g2_19;
+
     int64_t f9g3_38 = f9_2 * (int64_t) g3_19;
+
     int64_t f9g4_19 = f9 * (int64_t) g4_19;
+
     int64_t f9g5_38 = f9_2 * (int64_t) g5_19;
+
     int64_t f9g6_19 = f9 * (int64_t) g6_19;
+
     int64_t f9g7_38 = f9_2 * (int64_t) g7_19;
+
     int64_t f9g8_19 = f9 * (int64_t) g8_19;
+
     int64_t f9g9_38 = f9_2 * (int64_t) g9_19;
+
     int64_t h0 =
         f0g0 + f1g9_38 + f2g8_19 + f3g7_38 + f4g6_19 + f5g5_38 + f6g4_19 +
         f7g3_38 + f8g2_19 + f9g1_38;
@@ -534,14 +753,23 @@ static void fe_mul(fe h, const fe f, const fe g)
         f0g9 + f1g8 + f2g7 + f3g6 + f4g5 + f5g4 + f6g3 + f7g2 + f8g1 +
         f9g0;
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
 
     /*
@@ -645,25 +873,45 @@ Postconditions:
 static void fe_neg(fe h, const fe f)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t h0 = -f0;
+
     int32_t h1 = -f1;
+
     int32_t h2 = -f2;
+
     int32_t h3 = -f3;
+
     int32_t h4 = -f4;
+
     int32_t h5 = -f5;
+
     int32_t h6 = -f6;
+
     int32_t h7 = -f7;
+
     int32_t h8 = -f8;
+
     int32_t h9 = -f9;
+
     h[0] = h0;
     h[1] = h1;
     h[2] = h2;
@@ -696,102 +944,199 @@ See fe_mul.c for discussion of implementation strategy.
 static void fe_sq(fe h, const fe f)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t f0_2 = 2 * f0;
+
     int32_t f1_2 = 2 * f1;
+
     int32_t f2_2 = 2 * f2;
+
     int32_t f3_2 = 2 * f3;
+
     int32_t f4_2 = 2 * f4;
+
     int32_t f5_2 = 2 * f5;
+
     int32_t f6_2 = 2 * f6;
+
     int32_t f7_2 = 2 * f7;
+
     int32_t f5_38 = 38 * f5;    /* 1.959375*2^30 */
+
     int32_t f6_19 = 19 * f6;    /* 1.959375*2^30 */
+
     int32_t f7_38 = 38 * f7;    /* 1.959375*2^30 */
+
     int32_t f8_19 = 19 * f8;    /* 1.959375*2^30 */
+
     int32_t f9_38 = 38 * f9;    /* 1.959375*2^30 */
+
     int64_t f0f0 = f0 * (int64_t) f0;
+
     int64_t f0f1_2 = f0_2 * (int64_t) f1;
+
     int64_t f0f2_2 = f0_2 * (int64_t) f2;
+
     int64_t f0f3_2 = f0_2 * (int64_t) f3;
+
     int64_t f0f4_2 = f0_2 * (int64_t) f4;
+
     int64_t f0f5_2 = f0_2 * (int64_t) f5;
+
     int64_t f0f6_2 = f0_2 * (int64_t) f6;
+
     int64_t f0f7_2 = f0_2 * (int64_t) f7;
+
     int64_t f0f8_2 = f0_2 * (int64_t) f8;
+
     int64_t f0f9_2 = f0_2 * (int64_t) f9;
+
     int64_t f1f1_2 = f1_2 * (int64_t) f1;
+
     int64_t f1f2_2 = f1_2 * (int64_t) f2;
+
     int64_t f1f3_4 = f1_2 * (int64_t) f3_2;
+
     int64_t f1f4_2 = f1_2 * (int64_t) f4;
+
     int64_t f1f5_4 = f1_2 * (int64_t) f5_2;
+
     int64_t f1f6_2 = f1_2 * (int64_t) f6;
+
     int64_t f1f7_4 = f1_2 * (int64_t) f7_2;
+
     int64_t f1f8_2 = f1_2 * (int64_t) f8;
+
     int64_t f1f9_76 = f1_2 * (int64_t) f9_38;
+
     int64_t f2f2 = f2 * (int64_t) f2;
+
     int64_t f2f3_2 = f2_2 * (int64_t) f3;
+
     int64_t f2f4_2 = f2_2 * (int64_t) f4;
+
     int64_t f2f5_2 = f2_2 * (int64_t) f5;
+
     int64_t f2f6_2 = f2_2 * (int64_t) f6;
+
     int64_t f2f7_2 = f2_2 * (int64_t) f7;
+
     int64_t f2f8_38 = f2_2 * (int64_t) f8_19;
+
     int64_t f2f9_38 = f2 * (int64_t) f9_38;
+
     int64_t f3f3_2 = f3_2 * (int64_t) f3;
+
     int64_t f3f4_2 = f3_2 * (int64_t) f4;
+
     int64_t f3f5_4 = f3_2 * (int64_t) f5_2;
+
     int64_t f3f6_2 = f3_2 * (int64_t) f6;
+
     int64_t f3f7_76 = f3_2 * (int64_t) f7_38;
+
     int64_t f3f8_38 = f3_2 * (int64_t) f8_19;
+
     int64_t f3f9_76 = f3_2 * (int64_t) f9_38;
+
     int64_t f4f4 = f4 * (int64_t) f4;
+
     int64_t f4f5_2 = f4_2 * (int64_t) f5;
+
     int64_t f4f6_38 = f4_2 * (int64_t) f6_19;
+
     int64_t f4f7_38 = f4 * (int64_t) f7_38;
+
     int64_t f4f8_38 = f4_2 * (int64_t) f8_19;
+
     int64_t f4f9_38 = f4 * (int64_t) f9_38;
+
     int64_t f5f5_38 = f5 * (int64_t) f5_38;
+
     int64_t f5f6_38 = f5_2 * (int64_t) f6_19;
+
     int64_t f5f7_76 = f5_2 * (int64_t) f7_38;
+
     int64_t f5f8_38 = f5_2 * (int64_t) f8_19;
+
     int64_t f5f9_76 = f5_2 * (int64_t) f9_38;
+
     int64_t f6f6_19 = f6 * (int64_t) f6_19;
+
     int64_t f6f7_38 = f6 * (int64_t) f7_38;
+
     int64_t f6f8_38 = f6_2 * (int64_t) f8_19;
+
     int64_t f6f9_38 = f6 * (int64_t) f9_38;
+
     int64_t f7f7_38 = f7 * (int64_t) f7_38;
+
     int64_t f7f8_38 = f7_2 * (int64_t) f8_19;
+
     int64_t f7f9_76 = f7_2 * (int64_t) f9_38;
+
     int64_t f8f8_19 = f8 * (int64_t) f8_19;
+
     int64_t f8f9_38 = f8 * (int64_t) f9_38;
+
     int64_t f9f9_38 = f9 * (int64_t) f9_38;
+
     int64_t h0 = f0f0 + f1f9_76 + f2f8_38 + f3f7_76 + f4f6_38 + f5f5_38;
+
     int64_t h1 = f0f1_2 + f2f9_38 + f3f8_38 + f4f7_38 + f5f6_38;
+
     int64_t h2 = f0f2_2 + f1f1_2 + f3f9_76 + f4f8_38 + f5f7_76 + f6f6_19;
+
     int64_t h3 = f0f3_2 + f1f2_2 + f4f9_38 + f5f8_38 + f6f7_38;
+
     int64_t h4 = f0f4_2 + f1f3_4 + f2f2 + f5f9_76 + f6f8_38 + f7f7_38;
+
     int64_t h5 = f0f5_2 + f1f4_2 + f2f3_2 + f6f9_38 + f7f8_38;
+
     int64_t h6 = f0f6_2 + f1f5_4 + f2f4_2 + f3f3_2 + f7f9_76 + f8f8_19;
+
     int64_t h7 = f0f7_2 + f1f6_2 + f2f5_2 + f3f4_2 + f8f9_38;
+
     int64_t h8 = f0f8_2 + f1f7_4 + f2f6_2 + f3f5_4 + f4f4 + f9f9_38;
+
     int64_t h9 = f0f9_2 + f1f8_2 + f2f7_2 + f3f6_2 + f4f5_2;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
 
     carry0 = (h0 + (int64_t) (1 << 25)) >> 26;
@@ -869,102 +1214,199 @@ See fe_mul.c for discussion of implementation strategy.
 static void fe_sq2(fe h, const fe f)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t f0_2 = 2 * f0;
+
     int32_t f1_2 = 2 * f1;
+
     int32_t f2_2 = 2 * f2;
+
     int32_t f3_2 = 2 * f3;
+
     int32_t f4_2 = 2 * f4;
+
     int32_t f5_2 = 2 * f5;
+
     int32_t f6_2 = 2 * f6;
+
     int32_t f7_2 = 2 * f7;
+
     int32_t f5_38 = 38 * f5;    /* 1.959375*2^30 */
+
     int32_t f6_19 = 19 * f6;    /* 1.959375*2^30 */
+
     int32_t f7_38 = 38 * f7;    /* 1.959375*2^30 */
+
     int32_t f8_19 = 19 * f8;    /* 1.959375*2^30 */
+
     int32_t f9_38 = 38 * f9;    /* 1.959375*2^30 */
+
     int64_t f0f0 = f0 * (int64_t) f0;
+
     int64_t f0f1_2 = f0_2 * (int64_t) f1;
+
     int64_t f0f2_2 = f0_2 * (int64_t) f2;
+
     int64_t f0f3_2 = f0_2 * (int64_t) f3;
+
     int64_t f0f4_2 = f0_2 * (int64_t) f4;
+
     int64_t f0f5_2 = f0_2 * (int64_t) f5;
+
     int64_t f0f6_2 = f0_2 * (int64_t) f6;
+
     int64_t f0f7_2 = f0_2 * (int64_t) f7;
+
     int64_t f0f8_2 = f0_2 * (int64_t) f8;
+
     int64_t f0f9_2 = f0_2 * (int64_t) f9;
+
     int64_t f1f1_2 = f1_2 * (int64_t) f1;
+
     int64_t f1f2_2 = f1_2 * (int64_t) f2;
+
     int64_t f1f3_4 = f1_2 * (int64_t) f3_2;
+
     int64_t f1f4_2 = f1_2 * (int64_t) f4;
+
     int64_t f1f5_4 = f1_2 * (int64_t) f5_2;
+
     int64_t f1f6_2 = f1_2 * (int64_t) f6;
+
     int64_t f1f7_4 = f1_2 * (int64_t) f7_2;
+
     int64_t f1f8_2 = f1_2 * (int64_t) f8;
+
     int64_t f1f9_76 = f1_2 * (int64_t) f9_38;
+
     int64_t f2f2 = f2 * (int64_t) f2;
+
     int64_t f2f3_2 = f2_2 * (int64_t) f3;
+
     int64_t f2f4_2 = f2_2 * (int64_t) f4;
+
     int64_t f2f5_2 = f2_2 * (int64_t) f5;
+
     int64_t f2f6_2 = f2_2 * (int64_t) f6;
+
     int64_t f2f7_2 = f2_2 * (int64_t) f7;
+
     int64_t f2f8_38 = f2_2 * (int64_t) f8_19;
+
     int64_t f2f9_38 = f2 * (int64_t) f9_38;
+
     int64_t f3f3_2 = f3_2 * (int64_t) f3;
+
     int64_t f3f4_2 = f3_2 * (int64_t) f4;
+
     int64_t f3f5_4 = f3_2 * (int64_t) f5_2;
+
     int64_t f3f6_2 = f3_2 * (int64_t) f6;
+
     int64_t f3f7_76 = f3_2 * (int64_t) f7_38;
+
     int64_t f3f8_38 = f3_2 * (int64_t) f8_19;
+
     int64_t f3f9_76 = f3_2 * (int64_t) f9_38;
+
     int64_t f4f4 = f4 * (int64_t) f4;
+
     int64_t f4f5_2 = f4_2 * (int64_t) f5;
+
     int64_t f4f6_38 = f4_2 * (int64_t) f6_19;
+
     int64_t f4f7_38 = f4 * (int64_t) f7_38;
+
     int64_t f4f8_38 = f4_2 * (int64_t) f8_19;
+
     int64_t f4f9_38 = f4 * (int64_t) f9_38;
+
     int64_t f5f5_38 = f5 * (int64_t) f5_38;
+
     int64_t f5f6_38 = f5_2 * (int64_t) f6_19;
+
     int64_t f5f7_76 = f5_2 * (int64_t) f7_38;
+
     int64_t f5f8_38 = f5_2 * (int64_t) f8_19;
+
     int64_t f5f9_76 = f5_2 * (int64_t) f9_38;
+
     int64_t f6f6_19 = f6 * (int64_t) f6_19;
+
     int64_t f6f7_38 = f6 * (int64_t) f7_38;
+
     int64_t f6f8_38 = f6_2 * (int64_t) f8_19;
+
     int64_t f6f9_38 = f6 * (int64_t) f9_38;
+
     int64_t f7f7_38 = f7 * (int64_t) f7_38;
+
     int64_t f7f8_38 = f7_2 * (int64_t) f8_19;
+
     int64_t f7f9_76 = f7_2 * (int64_t) f9_38;
+
     int64_t f8f8_19 = f8 * (int64_t) f8_19;
+
     int64_t f8f9_38 = f8 * (int64_t) f9_38;
+
     int64_t f9f9_38 = f9 * (int64_t) f9_38;
+
     int64_t h0 = f0f0 + f1f9_76 + f2f8_38 + f3f7_76 + f4f6_38 + f5f5_38;
+
     int64_t h1 = f0f1_2 + f2f9_38 + f3f8_38 + f4f7_38 + f5f6_38;
+
     int64_t h2 = f0f2_2 + f1f1_2 + f3f9_76 + f4f8_38 + f5f7_76 + f6f6_19;
+
     int64_t h3 = f0f3_2 + f1f2_2 + f4f9_38 + f5f8_38 + f6f7_38;
+
     int64_t h4 = f0f4_2 + f1f3_4 + f2f2 + f5f9_76 + f6f8_38 + f7f7_38;
+
     int64_t h5 = f0f5_2 + f1f4_2 + f2f3_2 + f6f9_38 + f7f8_38;
+
     int64_t h6 = f0f6_2 + f1f5_4 + f2f4_2 + f3f3_2 + f7f9_76 + f8f8_19;
+
     int64_t h7 = f0f7_2 + f1f6_2 + f2f5_2 + f3f4_2 + f8f9_38;
+
     int64_t h8 = f0f8_2 + f1f7_4 + f2f6_2 + f3f5_4 + f4f4 + f9f9_38;
+
     int64_t h9 = f0f9_2 + f1f8_2 + f2f7_2 + f3f6_2 + f4f5_2;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
 
     h0 += h0;
@@ -1050,35 +1492,65 @@ Postconditions:
 static void fe_sub(fe h, const fe f, const fe g)
 {
     int32_t f0 = f[0];
+
     int32_t f1 = f[1];
+
     int32_t f2 = f[2];
+
     int32_t f3 = f[3];
+
     int32_t f4 = f[4];
+
     int32_t f5 = f[5];
+
     int32_t f6 = f[6];
+
     int32_t f7 = f[7];
+
     int32_t f8 = f[8];
+
     int32_t f9 = f[9];
+
     int32_t g0 = g[0];
+
     int32_t g1 = g[1];
+
     int32_t g2 = g[2];
+
     int32_t g3 = g[3];
+
     int32_t g4 = g[4];
+
     int32_t g5 = g[5];
+
     int32_t g6 = g[6];
+
     int32_t g7 = g[7];
+
     int32_t g8 = g[8];
+
     int32_t g9 = g[9];
+
     int32_t h0 = f0 - g0;
+
     int32_t h1 = f1 - g1;
+
     int32_t h2 = f2 - g2;
+
     int32_t h3 = f3 - g3;
+
     int32_t h4 = f4 - g4;
+
     int32_t h5 = f5 - g5;
+
     int32_t h6 = f6 - g6;
+
     int32_t h7 = f7 - g7;
+
     int32_t h8 = f8 - g8;
+
     int32_t h9 = f9 - g9;
+
     h[0] = h0;
     h[1] = h1;
     h[2] = h2;
@@ -1121,25 +1593,45 @@ Proof:
 static void fe_tobytes(unsigned char *s, const fe h)
 {
     int32_t h0 = h[0];
+
     int32_t h1 = h[1];
+
     int32_t h2 = h[2];
+
     int32_t h3 = h[3];
+
     int32_t h4 = h[4];
+
     int32_t h5 = h[5];
+
     int32_t h6 = h[6];
+
     int32_t h7 = h[7];
+
     int32_t h8 = h[8];
+
     int32_t h9 = h[9];
+
     int32_t q;
+
     int32_t carry0;
+
     int32_t carry1;
+
     int32_t carry2;
+
     int32_t carry3;
+
     int32_t carry4;
+
     int32_t carry5;
+
     int32_t carry6;
+
     int32_t carry7;
+
     int32_t carry8;
+
     int32_t carry9;
 
     q = (19 * h9 + (((int32_t) 1) << 24)) >> 25;
@@ -1235,6 +1727,7 @@ static void fe_tobytes(unsigned char *s, const fe h)
 void ge_add(ge_p1p1 * r, const ge_p3 * p, const ge_cached * q)
 {
     fe t0;
+
     fe_add(r->X, p->Y, p->X);
     fe_sub(r->Y, p->Y, p->X);
     fe_mul(r->Z, r->X, q->YplusX);
@@ -1253,7 +1746,9 @@ void ge_add(ge_p1p1 * r, const ge_p3 * p, const ge_cached * q)
 static void slide(signed char *r, const unsigned char *a)
 {
     int i;
+
     int b;
+
     int k;
 
     for (i = 0; i < 256; ++i)
@@ -1296,7 +1791,9 @@ static void slide(signed char *r, const unsigned char *a)
 void ge_dsm_precomp(ge_dsmp r, const ge_p3 * s)
 {
     ge_p1p1 t;
+
     ge_p3 s2, u;
+
     ge_p3_to_cached(&r[0], s);
     ge_p3_dbl(&t, s);
     ge_p1p1_to_p3(&s2, &t);
@@ -1335,10 +1832,15 @@ ge_double_scalarmult_base_vartime(ge_p2 * r, const unsigned char *a,
                                   const ge_p3 * A, const unsigned char *b)
 {
     signed char aslide[256];
+
     signed char bslide[256];
+
     ge_dsmp Ai;                 /* A, 3A, 5A, 7A, 9A, 11A, 13A, 15A */
+
     ge_p1p1 t;
+
     ge_p3 u;
+
     int i;
 
     slide(aslide, a);
@@ -1386,31 +1888,53 @@ ge_double_scalarmult_base_vartime(ge_p2 * r, const unsigned char *a,
 int ge_frombytes_vartime(ge_p3 * h, const unsigned char *s)
 {
     fe u;
+
     fe v;
+
     fe vxx;
+
     fe check;
 
     /* From fe_frombytes.c */
 
     int64_t h0 = load_4(s);
+
     int64_t h1 = load_3(s + 4) << 6;
+
     int64_t h2 = load_3(s + 7) << 5;
+
     int64_t h3 = load_3(s + 10) << 3;
+
     int64_t h4 = load_3(s + 13) << 2;
+
     int64_t h5 = load_4(s + 16);
+
     int64_t h6 = load_3(s + 20) << 7;
+
     int64_t h7 = load_3(s + 23) << 5;
+
     int64_t h8 = load_3(s + 26) << 4;
+
     int64_t h9 = (load_3(s + 29) & 8388607) << 2;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
 
     /* Validate the number to be canonical */
@@ -1511,6 +2035,7 @@ r = p + q
 static void ge_madd(ge_p1p1 * r, const ge_p3 * p, const ge_precomp * q)
 {
     fe t0;
+
     fe_add(r->X, p->Y, p->X);
     fe_sub(r->Y, p->Y, p->X);
     fe_mul(r->Z, r->X, q->yplusx);
@@ -1532,6 +2057,7 @@ r = p - q
 static void ge_msub(ge_p1p1 * r, const ge_p3 * p, const ge_precomp * q)
 {
     fe t0;
+
     fe_add(r->X, p->Y, p->X);
     fe_sub(r->Y, p->Y, p->X);
     fe_mul(r->Z, r->X, q->yminusx);
@@ -1589,6 +2115,7 @@ r = 2 * p
 void ge_p2_dbl(ge_p1p1 * r, const ge_p2 * p)
 {
     fe t0;
+
     fe_sq(r->X, p->X);
     fe_sq(r->Z, p->Y);
     fe_sq2(r->T, p->Z);
@@ -1619,6 +2146,7 @@ r = 2 * p
 static void ge_p3_dbl(ge_p1p1 * r, const ge_p3 * p)
 {
     ge_p2 q;
+
     ge_p3_to_p2(&q, p);
     ge_p2_dbl(r, &q);
 }
@@ -1655,7 +2183,9 @@ void ge_p3_to_p2(ge_p2 * r, const ge_p3 * p)
 void ge_p3_tobytes(unsigned char *s, const ge_p3 * h)
 {
     fe recip;
+
     fe x;
+
     fe y;
 
     fe_invert(recip, h->Z);
@@ -1679,9 +2209,13 @@ static void ge_precomp_0(ge_precomp * h)
 static unsigned char equal(signed char b, signed char c)
 {
     unsigned char ub = b;
+
     unsigned char uc = c;
+
     unsigned char x = ub ^ uc;  /* 0: yes; 1..255: no */
+
     uint32_t y = x;             /* 0: yes; 1..255: no */
+
     y -= 1;                     /* 4294967295: yes; 0..254: no */
     y >>= 31;                   /* 1: yes; 0: no */
     return y;
@@ -1690,6 +2224,7 @@ static unsigned char equal(signed char b, signed char c)
 static unsigned char negative(signed char b)
 {
     unsigned long long x = b;   /* 18446744073709551361..18446744073709551615: yes; 0..255: no */
+
     x >>= 63;                   /* 1: yes; 0: no */
     return (unsigned char) x;
 }
@@ -1705,7 +2240,9 @@ ge_precomp_cmov(ge_precomp * t, const ge_precomp * u, unsigned char b)
 static void select(ge_precomp * t, int pos, signed char b)
 {
     ge_precomp minust;
+
     unsigned char bnegative = negative(b);
+
     unsigned char babs = b - (((-bnegative) & b) << 1);
 
     ge_precomp_0(t);
@@ -1735,10 +2272,15 @@ Preconditions:
 void ge_scalarmult_base(ge_p3 * h, const unsigned char *a)
 {
     signed char e[64];
+
     signed char carry;
+
     ge_p1p1 r;
+
     ge_p2 s;
+
     ge_precomp t;
+
     int i;
 
     for (i = 0; i < 32; ++i)
@@ -1794,6 +2336,7 @@ r = p - q
 void ge_sub(ge_p1p1 * r, const ge_p3 * p, const ge_cached * q)
 {
     fe t0;
+
     fe_add(r->X, p->Y, p->X);
     fe_sub(r->Y, p->Y, p->X);
     fe_mul(r->Z, r->X, q->YminusX);
@@ -1812,7 +2355,9 @@ void ge_sub(ge_p1p1 * r, const ge_p3 * p, const ge_cached * q)
 void ge_tobytes(unsigned char *s, const ge_p2 * h)
 {
     fe recip;
+
     fe x;
+
     fe y;
 
     fe_invert(recip, h->Z);
@@ -1837,45 +2382,85 @@ Output:
 void sc_reduce(unsigned char *s)
 {
     int64_t s0 = 2097151 & load_3(s);
+
     int64_t s1 = 2097151 & (load_4(s + 2) >> 5);
+
     int64_t s2 = 2097151 & (load_3(s + 5) >> 2);
+
     int64_t s3 = 2097151 & (load_4(s + 7) >> 7);
+
     int64_t s4 = 2097151 & (load_4(s + 10) >> 4);
+
     int64_t s5 = 2097151 & (load_3(s + 13) >> 1);
+
     int64_t s6 = 2097151 & (load_4(s + 15) >> 6);
+
     int64_t s7 = 2097151 & (load_3(s + 18) >> 3);
+
     int64_t s8 = 2097151 & load_3(s + 21);
+
     int64_t s9 = 2097151 & (load_4(s + 23) >> 5);
+
     int64_t s10 = 2097151 & (load_3(s + 26) >> 2);
+
     int64_t s11 = 2097151 & (load_4(s + 28) >> 7);
+
     int64_t s12 = 2097151 & (load_4(s + 31) >> 4);
+
     int64_t s13 = 2097151 & (load_3(s + 34) >> 1);
+
     int64_t s14 = 2097151 & (load_4(s + 36) >> 6);
+
     int64_t s15 = 2097151 & (load_3(s + 39) >> 3);
+
     int64_t s16 = 2097151 & load_3(s + 42);
+
     int64_t s17 = 2097151 & (load_4(s + 44) >> 5);
+
     int64_t s18 = 2097151 & (load_3(s + 47) >> 2);
+
     int64_t s19 = 2097151 & (load_4(s + 49) >> 7);
+
     int64_t s20 = 2097151 & (load_4(s + 52) >> 4);
+
     int64_t s21 = 2097151 & (load_3(s + 55) >> 1);
+
     int64_t s22 = 2097151 & (load_4(s + 57) >> 6);
+
     int64_t s23 = (load_4(s + 60) >> 3);
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
+
     int64_t carry10;
+
     int64_t carry11;
+
     int64_t carry12;
+
     int64_t carry13;
+
     int64_t carry14;
+
     int64_t carry15;
+
     int64_t carry16;
 
     s11 += s23 * 666643;
@@ -2161,6 +2746,7 @@ void sc_reduce(unsigned char *s)
 static void fe_divpowm1(fe r, const fe u, const fe v)
 {
     fe v3, uv7, t0, t1, t2;
+
     int i;
 
     fe_sq(v3, v);
@@ -2251,9 +2837,13 @@ ge_cached_cmov(ge_cached * t, const ge_cached * u, unsigned char b)
 void ge_scalarmult(ge_p2 * r, const unsigned char *a, const ge_p3 * A)
 {
     signed char e[64];
+
     int carry, carry2, i;
+
     ge_cached Ai[8];            /* 1 * A, 2 * A, ..., 8 * A */
+
     ge_p1p1 t;
+
     ge_p3 u;
 
     carry = 0;                  /* 0..1 */
@@ -2282,9 +2872,13 @@ void ge_scalarmult(ge_p2 * r, const unsigned char *a, const ge_p3 * A)
     for (i = 63; i >= 0; i--)
     {
         signed char b = e[i];
+
         unsigned char bnegative = negative(b);
+
         unsigned char babs = b - (((-bnegative) & b) << 1);
+
         ge_cached cur, minuscur;
+
         ge_p2_dbl(&t, r);
         ge_p1p1_to_p2(r, &t);
         ge_p2_dbl(&t, r);
@@ -2319,10 +2913,15 @@ ge_double_scalarmult_precomp_vartime(ge_p2 * r, const unsigned char *a,
                                      const ge_dsmp Bi)
 {
     signed char aslide[256];
+
     signed char bslide[256];
+
     ge_dsmp Ai;                 /* A, 3A, 5A, 7A, 9A, 11A, 13A, 15A */
+
     ge_p1p1 t;
+
     ge_p3 u;
+
     int i;
 
     slide(aslide, a);
@@ -2368,8 +2967,11 @@ ge_double_scalarmult_precomp_vartime(ge_p2 * r, const unsigned char *a,
 int ge_check_subgroup_precomp_vartime(const ge_dsmp p)
 {
     ge_p3 s;
+
     ge_p1p1 t;
+
     ge_p2 u;
+
     ge_p3_0(&s);
     ge_add(&t, &s, p + 7);
     ge_p1p1_to_p3(&s, &t);
@@ -2921,6 +3523,7 @@ int ge_check_subgroup_precomp_vartime(const ge_dsmp p)
 void ge_mul8(ge_p1p1 * r, const ge_p2 * t)
 {
     ge_p2 u;
+
     ge_p2_dbl(r, t);
     ge_p1p1_to_p2(&u, r);
     ge_p2_dbl(r, &u);
@@ -2931,29 +3534,49 @@ void ge_mul8(ge_p1p1 * r, const ge_p2 * t)
 void ge_fromfe_frombytes_vartime(ge_p2 * r, const unsigned char *s)
 {
     fe u, v, w, x, y, z;
+
     unsigned char sign;
 
     /* From fe_frombytes.c */
 
     int64_t h0 = load_4(s);
+
     int64_t h1 = load_3(s + 4) << 6;
+
     int64_t h2 = load_3(s + 7) << 5;
+
     int64_t h3 = load_3(s + 10) << 3;
+
     int64_t h4 = load_3(s + 13) << 2;
+
     int64_t h5 = load_4(s + 16);
+
     int64_t h6 = load_3(s + 20) << 7;
+
     int64_t h7 = load_3(s + 23) << 5;
+
     int64_t h8 = load_3(s + 26) << 4;
+
     int64_t h9 = load_3(s + 29) << 2;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
 
     carry9 = (h9 + (int64_t) (1 << 24)) >> 25;
@@ -3056,6 +3679,7 @@ void ge_fromfe_frombytes_vartime(ge_p2 * r, const unsigned char *s)
 #if !defined(NDEBUG)
     {
         fe check_x, check_y, check_iz, check_v;
+
         fe_invert(check_iz, r->Z);
         fe_mul(check_x, r->X, check_iz);
         fe_mul(check_y, r->Y, check_iz);
@@ -3075,6 +3699,7 @@ void ge_fromfe_frombytes_vartime(ge_p2 * r, const unsigned char *s)
 void sc_0(unsigned char *s)
 {
     int i;
+
     for (i = 0; i < 32; i++)
     {
         s[i] = 0;
@@ -3084,29 +3709,53 @@ void sc_0(unsigned char *s)
 void sc_reduce32(unsigned char *s)
 {
     int64_t s0 = 2097151 & load_3(s);
+
     int64_t s1 = 2097151 & (load_4(s + 2) >> 5);
+
     int64_t s2 = 2097151 & (load_3(s + 5) >> 2);
+
     int64_t s3 = 2097151 & (load_4(s + 7) >> 7);
+
     int64_t s4 = 2097151 & (load_4(s + 10) >> 4);
+
     int64_t s5 = 2097151 & (load_3(s + 13) >> 1);
+
     int64_t s6 = 2097151 & (load_4(s + 15) >> 6);
+
     int64_t s7 = 2097151 & (load_3(s + 18) >> 3);
+
     int64_t s8 = 2097151 & load_3(s + 21);
+
     int64_t s9 = 2097151 & (load_4(s + 23) >> 5);
+
     int64_t s10 = 2097151 & (load_3(s + 26) >> 2);
+
     int64_t s11 = (load_4(s + 28) >> 7);
+
     int64_t s12 = 0;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
+
     int64_t carry10;
+
     int64_t carry11;
 
     carry0 = (s0 + (1 << 20)) >> 21;
@@ -3271,53 +3920,101 @@ void
 sc_add(unsigned char *s, const unsigned char *a, const unsigned char *b)
 {
     int64_t a0 = 2097151 & load_3(a);
+
     int64_t a1 = 2097151 & (load_4(a + 2) >> 5);
+
     int64_t a2 = 2097151 & (load_3(a + 5) >> 2);
+
     int64_t a3 = 2097151 & (load_4(a + 7) >> 7);
+
     int64_t a4 = 2097151 & (load_4(a + 10) >> 4);
+
     int64_t a5 = 2097151 & (load_3(a + 13) >> 1);
+
     int64_t a6 = 2097151 & (load_4(a + 15) >> 6);
+
     int64_t a7 = 2097151 & (load_3(a + 18) >> 3);
+
     int64_t a8 = 2097151 & load_3(a + 21);
+
     int64_t a9 = 2097151 & (load_4(a + 23) >> 5);
+
     int64_t a10 = 2097151 & (load_3(a + 26) >> 2);
+
     int64_t a11 = (load_4(a + 28) >> 7);
+
     int64_t b0 = 2097151 & load_3(b);
+
     int64_t b1 = 2097151 & (load_4(b + 2) >> 5);
+
     int64_t b2 = 2097151 & (load_3(b + 5) >> 2);
+
     int64_t b3 = 2097151 & (load_4(b + 7) >> 7);
+
     int64_t b4 = 2097151 & (load_4(b + 10) >> 4);
+
     int64_t b5 = 2097151 & (load_3(b + 13) >> 1);
+
     int64_t b6 = 2097151 & (load_4(b + 15) >> 6);
+
     int64_t b7 = 2097151 & (load_3(b + 18) >> 3);
+
     int64_t b8 = 2097151 & load_3(b + 21);
+
     int64_t b9 = 2097151 & (load_4(b + 23) >> 5);
+
     int64_t b10 = 2097151 & (load_3(b + 26) >> 2);
+
     int64_t b11 = (load_4(b + 28) >> 7);
+
     int64_t s0 = a0 + b0;
+
     int64_t s1 = a1 + b1;
+
     int64_t s2 = a2 + b2;
+
     int64_t s3 = a3 + b3;
+
     int64_t s4 = a4 + b4;
+
     int64_t s5 = a5 + b5;
+
     int64_t s6 = a6 + b6;
+
     int64_t s7 = a7 + b7;
+
     int64_t s8 = a8 + b8;
+
     int64_t s9 = a9 + b9;
+
     int64_t s10 = a10 + b10;
+
     int64_t s11 = a11 + b11;
+
     int64_t s12 = 0;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
+
     int64_t carry10;
+
     int64_t carry11;
 
     carry0 = (s0 + (1 << 20)) >> 21;
@@ -3482,53 +4179,101 @@ void
 sc_sub(unsigned char *s, const unsigned char *a, const unsigned char *b)
 {
     int64_t a0 = 2097151 & load_3(a);
+
     int64_t a1 = 2097151 & (load_4(a + 2) >> 5);
+
     int64_t a2 = 2097151 & (load_3(a + 5) >> 2);
+
     int64_t a3 = 2097151 & (load_4(a + 7) >> 7);
+
     int64_t a4 = 2097151 & (load_4(a + 10) >> 4);
+
     int64_t a5 = 2097151 & (load_3(a + 13) >> 1);
+
     int64_t a6 = 2097151 & (load_4(a + 15) >> 6);
+
     int64_t a7 = 2097151 & (load_3(a + 18) >> 3);
+
     int64_t a8 = 2097151 & load_3(a + 21);
+
     int64_t a9 = 2097151 & (load_4(a + 23) >> 5);
+
     int64_t a10 = 2097151 & (load_3(a + 26) >> 2);
+
     int64_t a11 = (load_4(a + 28) >> 7);
+
     int64_t b0 = 2097151 & load_3(b);
+
     int64_t b1 = 2097151 & (load_4(b + 2) >> 5);
+
     int64_t b2 = 2097151 & (load_3(b + 5) >> 2);
+
     int64_t b3 = 2097151 & (load_4(b + 7) >> 7);
+
     int64_t b4 = 2097151 & (load_4(b + 10) >> 4);
+
     int64_t b5 = 2097151 & (load_3(b + 13) >> 1);
+
     int64_t b6 = 2097151 & (load_4(b + 15) >> 6);
+
     int64_t b7 = 2097151 & (load_3(b + 18) >> 3);
+
     int64_t b8 = 2097151 & load_3(b + 21);
+
     int64_t b9 = 2097151 & (load_4(b + 23) >> 5);
+
     int64_t b10 = 2097151 & (load_3(b + 26) >> 2);
+
     int64_t b11 = (load_4(b + 28) >> 7);
+
     int64_t s0 = a0 - b0;
+
     int64_t s1 = a1 - b1;
+
     int64_t s2 = a2 - b2;
+
     int64_t s3 = a3 - b3;
+
     int64_t s4 = a4 - b4;
+
     int64_t s5 = a5 - b5;
+
     int64_t s6 = a6 - b6;
+
     int64_t s7 = a7 - b7;
+
     int64_t s8 = a8 - b8;
+
     int64_t s9 = a9 - b9;
+
     int64_t s10 = a10 - b10;
+
     int64_t s11 = a11 - b11;
+
     int64_t s12 = 0;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
+
     int64_t carry10;
+
     int64_t carry11;
 
     carry0 = (s0 + (1 << 20)) >> 21;
@@ -3705,87 +4450,169 @@ sc_mulsub(unsigned char *s, const unsigned char *a, const unsigned char *b,
           const unsigned char *c)
 {
     int64_t a0 = 2097151 & load_3(a);
+
     int64_t a1 = 2097151 & (load_4(a + 2) >> 5);
+
     int64_t a2 = 2097151 & (load_3(a + 5) >> 2);
+
     int64_t a3 = 2097151 & (load_4(a + 7) >> 7);
+
     int64_t a4 = 2097151 & (load_4(a + 10) >> 4);
+
     int64_t a5 = 2097151 & (load_3(a + 13) >> 1);
+
     int64_t a6 = 2097151 & (load_4(a + 15) >> 6);
+
     int64_t a7 = 2097151 & (load_3(a + 18) >> 3);
+
     int64_t a8 = 2097151 & load_3(a + 21);
+
     int64_t a9 = 2097151 & (load_4(a + 23) >> 5);
+
     int64_t a10 = 2097151 & (load_3(a + 26) >> 2);
+
     int64_t a11 = (load_4(a + 28) >> 7);
+
     int64_t b0 = 2097151 & load_3(b);
+
     int64_t b1 = 2097151 & (load_4(b + 2) >> 5);
+
     int64_t b2 = 2097151 & (load_3(b + 5) >> 2);
+
     int64_t b3 = 2097151 & (load_4(b + 7) >> 7);
+
     int64_t b4 = 2097151 & (load_4(b + 10) >> 4);
+
     int64_t b5 = 2097151 & (load_3(b + 13) >> 1);
+
     int64_t b6 = 2097151 & (load_4(b + 15) >> 6);
+
     int64_t b7 = 2097151 & (load_3(b + 18) >> 3);
+
     int64_t b8 = 2097151 & load_3(b + 21);
+
     int64_t b9 = 2097151 & (load_4(b + 23) >> 5);
+
     int64_t b10 = 2097151 & (load_3(b + 26) >> 2);
+
     int64_t b11 = (load_4(b + 28) >> 7);
+
     int64_t c0 = 2097151 & load_3(c);
+
     int64_t c1 = 2097151 & (load_4(c + 2) >> 5);
+
     int64_t c2 = 2097151 & (load_3(c + 5) >> 2);
+
     int64_t c3 = 2097151 & (load_4(c + 7) >> 7);
+
     int64_t c4 = 2097151 & (load_4(c + 10) >> 4);
+
     int64_t c5 = 2097151 & (load_3(c + 13) >> 1);
+
     int64_t c6 = 2097151 & (load_4(c + 15) >> 6);
+
     int64_t c7 = 2097151 & (load_3(c + 18) >> 3);
+
     int64_t c8 = 2097151 & load_3(c + 21);
+
     int64_t c9 = 2097151 & (load_4(c + 23) >> 5);
+
     int64_t c10 = 2097151 & (load_3(c + 26) >> 2);
+
     int64_t c11 = (load_4(c + 28) >> 7);
+
     int64_t s0;
+
     int64_t s1;
+
     int64_t s2;
+
     int64_t s3;
+
     int64_t s4;
+
     int64_t s5;
+
     int64_t s6;
+
     int64_t s7;
+
     int64_t s8;
+
     int64_t s9;
+
     int64_t s10;
+
     int64_t s11;
+
     int64_t s12;
+
     int64_t s13;
+
     int64_t s14;
+
     int64_t s15;
+
     int64_t s16;
+
     int64_t s17;
+
     int64_t s18;
+
     int64_t s19;
+
     int64_t s20;
+
     int64_t s21;
+
     int64_t s22;
+
     int64_t s23;
+
     int64_t carry0;
+
     int64_t carry1;
+
     int64_t carry2;
+
     int64_t carry3;
+
     int64_t carry4;
+
     int64_t carry5;
+
     int64_t carry6;
+
     int64_t carry7;
+
     int64_t carry8;
+
     int64_t carry9;
+
     int64_t carry10;
+
     int64_t carry11;
+
     int64_t carry12;
+
     int64_t carry13;
+
     int64_t carry14;
+
     int64_t carry15;
+
     int64_t carry16;
+
     int64_t carry17;
+
     int64_t carry18;
+
     int64_t carry19;
+
     int64_t carry20;
+
     int64_t carry21;
+
     int64_t carry22;
 
     s0 = c0 - a0 * b0;
@@ -4190,13 +5017,21 @@ static int64_t signum(int64_t a)
 int sc_check(const unsigned char *s)
 {
     int64_t s0 = load_4(s);
+
     int64_t s1 = load_4(s + 4);
+
     int64_t s2 = load_4(s + 8);
+
     int64_t s3 = load_4(s + 12);
+
     int64_t s4 = load_4(s + 16);
+
     int64_t s5 = load_4(s + 20);
+
     int64_t s6 = load_4(s + 24);
+
     int64_t s7 = load_4(s + 28);
+
     return (int) ((signum(1559614444 - s0) +
                    (signum(1477600026 - s1) << 1) +
                    (signum(2734136534 - s2) << 2) +

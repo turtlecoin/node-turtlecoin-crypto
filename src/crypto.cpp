@@ -48,6 +48,7 @@ namespace Crypto {
     void crypto_ops::generate_keys(PublicKey & pub, SecretKey & sec) {
         lock_guard < mutex > lock(random_lock);
         ge_p3 point;
+
         random_scalar(reinterpret_cast < EllipticCurveScalar & >(sec));
         ge_scalarmult_base(&point,
                            reinterpret_cast < unsigned char *>(&sec));
@@ -59,8 +60,10 @@ namespace Crypto {
                                                  SecretKey & second) {
         lock_guard < mutex > lock(random_lock);
         ge_p3 point;
+
         sec = second;
         sc_reduce32(reinterpret_cast < unsigned char *>(&sec)); // reduce in case second round of keys (sendkeys)
+
         ge_scalarmult_base(&point,
                            reinterpret_cast < unsigned char *>(&sec));
         ge_p3_tobytes(reinterpret_cast < unsigned char *>(&pub), &point);
@@ -71,7 +74,9 @@ namespace Crypto {
                                           bool recover) {
         lock_guard < mutex > lock(random_lock);
         ge_p3 point;
+
         SecretKey rng;
+
         if (recover)
         {
             rng = recovery_key;
@@ -81,6 +86,7 @@ namespace Crypto {
         }
         sec = rng;
         sc_reduce32(reinterpret_cast < unsigned char *>(&sec)); // reduce in case second round of keys (sendkeys)
+
         ge_scalarmult_base(&point,
                            reinterpret_cast < unsigned char *>(&sec));
         ge_p3_tobytes(reinterpret_cast < unsigned char *>(&pub), &point);
@@ -91,6 +97,7 @@ namespace Crypto {
 
     bool crypto_ops::check_key(const PublicKey & key) {
         ge_p3 point;
+
         return ge_frombytes_vartime(&point,
                                     reinterpret_cast <
                                     const unsigned char *>(&key)) == 0;
@@ -99,6 +106,7 @@ namespace Crypto {
     bool crypto_ops::secret_key_to_public_key(const SecretKey & sec,
                                               PublicKey & pub) {
         ge_p3 point;
+
         if (sc_check(reinterpret_cast < const unsigned char *>(&sec)) != 0)
         {
             return false;
@@ -107,6 +115,7 @@ namespace Crypto {
                            reinterpret_cast <
                            const unsigned char *>(&sec));
         ge_p3_tobytes(reinterpret_cast < unsigned char *>(&pub), &point);
+
         return true;
     }
 
@@ -114,8 +123,11 @@ namespace Crypto {
                                              const SecretKey & key2,
                                              KeyDerivation & derivation) {
         ge_p3 point;
+
         ge_p2 point2;
+
         ge_p1p1 point3;
+
         assert(sc_check(reinterpret_cast < const unsigned char *>(&key2))
                == 0);
         if (ge_frombytes_vartime
@@ -142,7 +154,9 @@ namespace Crypto {
             char output_index[(sizeof(size_t) * 8 + 6) / 7];
         }
         buf;
+
         char *end = buf.output_index;
+
         buf.derivation = derivation;
         Tools::write_varint(end, output_index);
         assert(end <= buf.output_index + sizeof buf.output_index);
@@ -160,11 +174,14 @@ namespace Crypto {
             char output_index[(sizeof(size_t) * 8 + 6) / 7 + 32];
         }
         buf;
+
         char *end = buf.output_index;
+
         buf.derivation = derivation;
         Tools::write_varint(end, output_index);
         assert(end <= buf.output_index + sizeof buf.output_index);
         size_t bufSize = end - reinterpret_cast < char *>(&buf);
+
         memcpy(end, suffix, suffixLength);
         hash_to_scalar(&buf, bufSize + suffixLength, res);
     }
@@ -174,11 +191,17 @@ namespace Crypto {
                                        const PublicKey & base,
                                        PublicKey & derived_key) {
         EllipticCurveScalar scalar;
+
         ge_p3 point1;
+
         ge_p3 point2;
+
         ge_cached point3;
+
         ge_p1p1 point4;
+
         ge_p2 point5;
+
         if (ge_frombytes_vartime
             (&point1,
              reinterpret_cast < const unsigned char *>(&base)) != 0)
@@ -203,11 +226,17 @@ namespace Crypto {
                                        size_t suffixLength,
                                        PublicKey & derived_key) {
         EllipticCurveScalar scalar;
+
         ge_p3 point1;
+
         ge_p3 point2;
+
         ge_cached point3;
+
         ge_p1p1 point4;
+
         ge_p2 point5;
+
         if (ge_frombytes_vartime
             (&point1,
              reinterpret_cast < const unsigned char *>(&base)) != 0)
@@ -238,10 +267,15 @@ namespace Crypto {
                                                         hashed_derivation)
     {
         ge_p3 point1;
+
         ge_p3 point2;
+
         ge_cached point3;
+
         ge_p1p1 point4;
+
         ge_p2 point5;
+
         if (ge_frombytes_vartime
             (&point1,
              reinterpret_cast < const unsigned char *>(&derived_key)) != 0)
@@ -256,6 +290,7 @@ namespace Crypto {
         ge_sub(&point4, &point1, &point3);
         ge_p1p1_to_p2(&point5, &point4);
         ge_tobytes(reinterpret_cast < unsigned char *>(&base), &point5);
+
         return true;
     }
 
@@ -264,6 +299,7 @@ namespace Crypto {
                                        const SecretKey & base,
                                        SecretKey & derived_key) {
         EllipticCurveScalar scalar;
+
         assert(sc_check(reinterpret_cast < const unsigned char *>(&base))
                == 0);
         derivation_to_scalar(derivation, output_index, scalar);
@@ -279,6 +315,7 @@ namespace Crypto {
                                        size_t suffixLength,
                                        SecretKey & derived_key) {
         EllipticCurveScalar scalar;
+
         assert(sc_check(reinterpret_cast < const unsigned char *>(&base))
                == 0);
         derivation_to_scalar(derivation, output_index, suffix,
@@ -294,11 +331,17 @@ namespace Crypto {
                                          const PublicKey & derived_key,
                                          PublicKey & base) {
         EllipticCurveScalar scalar;
+
         ge_p3 point1;
+
         ge_p3 point2;
+
         ge_cached point3;
+
         ge_p1p1 point4;
+
         ge_p2 point5;
+
         if (ge_frombytes_vartime
             (&point1,
              reinterpret_cast < const unsigned char *>(&derived_key)) != 0)
@@ -312,6 +355,7 @@ namespace Crypto {
         ge_sub(&point4, &point1, &point3);
         ge_p1p1_to_p2(&point5, &point4);
         ge_tobytes(reinterpret_cast < unsigned char *>(&base), &point5);
+
         return true;
     }
 
@@ -322,11 +366,17 @@ namespace Crypto {
                                          size_t suffixLength,
                                          PublicKey & base) {
         EllipticCurveScalar scalar;
+
         ge_p3 point1;
+
         ge_p3 point2;
+
         ge_cached point3;
+
         ge_p1p1 point4;
+
         ge_p2 point5;
+
         if (ge_frombytes_vartime
             (&point1,
              reinterpret_cast < const unsigned char *>(&derived_key)) != 0)
@@ -342,6 +392,7 @@ namespace Crypto {
         ge_sub(&point4, &point1, &point3);
         ge_p1p1_to_p2(&point5, &point4);
         ge_tobytes(reinterpret_cast < unsigned char *>(&base), &point5);
+
         return true;
     }
 
@@ -358,25 +409,33 @@ namespace Crypto {
                                         Signature & sig) {
         lock_guard < mutex > lock(random_lock);
         ge_p3 tmp3;
+
         EllipticCurveScalar k;
+
         s_comm buf;
+
 #if !defined(NDEBUG)
         {
             ge_p3 t;
+
             PublicKey t2;
+
             assert(sc_check
                    (reinterpret_cast < const unsigned char *>(&sec)) == 0);
             ge_scalarmult_base(&t,
                                reinterpret_cast <
                                const unsigned char *>(&sec));
             ge_p3_tobytes(reinterpret_cast < unsigned char *>(&t2), &t);
+
             assert(pub == t2);
         }
 #endif
         buf.h = prefix_hash;
         buf.key = reinterpret_cast < const EllipticCurvePoint & >(pub);
+
         random_scalar(k);
         ge_scalarmult_base(&tmp3, reinterpret_cast < unsigned char *>(&k));
+
         ge_p3_tobytes(reinterpret_cast < unsigned char *>(&buf.comm),
                       &tmp3);
         hash_to_scalar(&buf, sizeof(s_comm),
@@ -391,12 +450,17 @@ namespace Crypto {
                                      const PublicKey & pub,
                                      const Signature & sig) {
         ge_p2 tmp2;
+
         ge_p3 tmp3;
+
         EllipticCurveScalar c;
+
         s_comm buf;
+
         assert(check_key(pub));
         buf.h = prefix_hash;
         buf.key = reinterpret_cast < const EllipticCurvePoint & >(pub);
+
         if (ge_frombytes_vartime
             (&tmp3, reinterpret_cast < const unsigned char *>(&pub)) != 0)
         {
@@ -416,6 +480,7 @@ namespace Crypto {
                                           const unsigned char *>(&sig) +
                                           32);
         ge_tobytes(reinterpret_cast < unsigned char *>(&buf.comm), &tmp2);
+
         hash_to_scalar(&buf, sizeof(s_comm), c);
         sc_sub(reinterpret_cast < unsigned char *>(&c),
                reinterpret_cast < unsigned char *>(&c),
@@ -425,8 +490,11 @@ namespace Crypto {
 
     static void hash_to_ec(const PublicKey & key, ge_p3 & res) {
         Hash h;
+
         ge_p2 point;
+
         ge_p1p1 point2;
+
         cn_fast_hash(std::addressof(key), sizeof(PublicKey), h);
         ge_fromfe_frombytes_vartime(&point,
                                     reinterpret_cast <
@@ -438,7 +506,9 @@ namespace Crypto {
     KeyImage crypto_ops::scalarmultKey(const KeyImage & P,
                                        const KeyImage & a) {
         ge_p3 A;
+
         ge_p2 R;
+
         // maybe use assert instead?
         ge_frombytes_vartime(&A,
                              reinterpret_cast <
@@ -446,15 +516,20 @@ namespace Crypto {
         ge_scalarmult(&R, reinterpret_cast < const unsigned char *>(&a),
                       &A);
         KeyImage aP;
+
         ge_tobytes(reinterpret_cast < unsigned char *>(&aP), &R);
+
         return aP;
     }
 
     void crypto_ops::hash_data_to_ec(const uint8_t * data, std::size_t len,
                                      PublicKey & key) {
         Hash h;
+
         ge_p2 point;
+
         ge_p1p1 point2;
+
         cn_fast_hash(data, len, h);
         ge_fromfe_frombytes_vartime(&point,
                                     reinterpret_cast <
@@ -468,7 +543,9 @@ namespace Crypto {
                                         const SecretKey & sec,
                                         KeyImage & image) {
         ge_p3 point;
+
         ge_p2 point2;
+
         assert(sc_check(reinterpret_cast < const unsigned char *>(&sec)) ==
                0);
         hash_to_ec(pub, point);
@@ -502,9 +579,8 @@ namespace Crypto {
                                                         keyImage,
                                                         const std::vector <
                                                         PublicKey >
-                                                        publicKeys,
-                                                        const Crypto::
-                                                        SecretKey
+                                                        publicKeys, const
+                                                        Crypto::SecretKey
                                                         transactionSecretKey,
                                                         uint64_t
                                                         realOutput) {
@@ -513,7 +589,9 @@ namespace Crypto {
         lock_guard < mutex > lock(random_lock);
 
         ge_p3 image_unp;
+
         ge_dsmp image_pre;
+
         EllipticCurveScalar sum, k, h;
 
         rs_comm *const buf =
@@ -538,6 +616,7 @@ namespace Crypto {
         for (size_t i = 0; i < publicKeys.size(); i++)
         {
             ge_p2 tmp2;
+
             ge_p3 tmp3;
 
             if (i == realOutput)
@@ -666,6 +745,7 @@ namespace Crypto {
         for (size_t i = 0; i < pubs.size(); i++)
         {
             ge_p2 tmp2;
+
             ge_p3 tmp3;
 
             if (sc_check

@@ -56,8 +56,11 @@ static inline uint32_t integer_square_root_v2(uint64_t n)
     for (uint64_t bit = 1ULL << 60; bit; bit >>= 2)
     {
         const bool b = (n < r + bit);
+
         const uint64_t n_next = n - (r + bit);
+
         const uint64_t r_next = r + bit * 2;
+
         n = b ? n : n_next;
         r = b ? r : r_next;
         r >>= 1;

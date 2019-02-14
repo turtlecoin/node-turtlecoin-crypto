@@ -30,8 +30,11 @@ namespace Common {
             && outSize == sizeof(val);
     }
     std::string toHex(const void *data, uint64_t size); // Returns hex representation of ('data', 'size'), does not throw
+
     void toHex(const void *data, uint64_t size, std::string & text);    // Appends hex representation of ('data', 'size') to 'text', does not throw
+
     std::string toHex(const std::vector < uint8_t > &data);     // Returns hex representation of 'data', does not throw
+
     void toHex(const std::vector < uint8_t > &data, std::string & text);        // Appends hex representation of 'data' to 'text', does not throw
 
     template < class T > std::string podToHex(const T & s) {
@@ -39,10 +42,12 @@ namespace Common {
     }
 
     std::string extract(std::string & text, char delimiter);    // Does not throw
+
     std::string extract(const std::string & text, char delimiter, uint64_t & offset);   // Does not throw
 
     template < typename T > T fromString(const std::string & text) {    // Throws on error
         T value;
+
         std::istringstream stream(text);
         stream >> value;
         if (stream.fail())
@@ -81,6 +86,7 @@ namespace Common {
         for (uint64_t offset = 0; offset != source.size();)
         {
             T value;
+
             if (!fromString < T >
                 (extract(source, delimiter, offset), value))
             {

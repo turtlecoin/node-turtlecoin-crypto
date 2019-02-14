@@ -28,6 +28,7 @@ namespace Tools {
         std::string get_varint_data(const t_type & v) {
         std::stringstream ss;
         write_varint(std::ostreambuf_iterator < char >(ss), v);
+
         return ss.str();
     }
 
@@ -37,6 +38,7 @@ namespace Tools {
         && bits <= std::numeric_limits < T >::digits,
         int >::type read_varint(InputIt && first, InputIt && last, T & i) {
         int read = 0;
+
         i = 0;
         for (int shift = 0;; shift += 7)
         {
@@ -45,6 +47,7 @@ namespace Tools {
                 return read;    // End of input.
             }
             unsigned char byte = *first++;
+
             ++read;
             if (shift + 7 >= bits && byte >= 1 << (bits - shift))
             {

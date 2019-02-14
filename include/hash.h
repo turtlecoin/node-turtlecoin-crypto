@@ -56,7 +56,9 @@ namespace Crypto {
         cn_fast_hash(data, length, reinterpret_cast < char *>(&hash));
     } inline Hash cn_fast_hash(const void *data, size_t length) {
         Hash h;
+
         cn_fast_hash(data, length, reinterpret_cast < char *>(&h));
+
         return h;
     }
 
@@ -193,6 +195,7 @@ namespace Crypto {
     inline void cn_soft_shell_slow_hash_v0(const void *data, size_t length,
                                            Hash & hash, uint32_t height) {
         uint32_t base_offset = (height % CN_SOFT_SHELL_WINDOW);
+
         int32_t offset =
             (height % (CN_SOFT_SHELL_WINDOW * 2)) - (base_offset * 2);
         if (offset < 0)
@@ -217,6 +220,7 @@ namespace Crypto {
     inline void cn_soft_shell_slow_hash_v1(const void *data, size_t length,
                                            Hash & hash, uint32_t height) {
         uint32_t base_offset = (height % CN_SOFT_SHELL_WINDOW);
+
         int32_t offset =
             (height % (CN_SOFT_SHELL_WINDOW * 2)) - (base_offset * 2);
         if (offset < 0)
@@ -241,6 +245,7 @@ namespace Crypto {
     inline void cn_soft_shell_slow_hash_v2(const void *data, size_t length,
                                            Hash & hash, uint32_t height) {
         uint32_t base_offset = (height % CN_SOFT_SHELL_WINDOW);
+
         int32_t offset =
             (height % (CN_SOFT_SHELL_WINDOW * 2)) - (base_offset * 2);
         if (offset < 0)

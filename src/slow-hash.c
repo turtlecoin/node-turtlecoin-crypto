@@ -253,6 +253,7 @@ extern int aesb_pseudo_round(const uint8_t * in, uint8_t * out,
   _c = _mm_load_si128(R128(&hp_state[j])); \
   _a = _mm_load_si128(R128(a)); \
 
+
 /*
  * An SSE-optimized implementation of the second half of CryptoNight step 3.
  * After using AES to mix a scratchpad value into _c (done by the caller),
@@ -296,9 +297,11 @@ union cn_slow_hash_state {
         uint8_t init[INIT_SIZE_BYTE];
     };
 };
+
 #pragma pack(pop)
 
 THREADV uint8_t *hp_state = NULL;
+
 THREADV int hp_allocated = 0;
 
 #if defined(_MSC_VER)
@@ -341,6 +344,7 @@ STATIC INLINE int force_software_aes(void)
         return use;
 
     const char *env = getenv("TURTLECOIN_USE_SOFTWARE_AES");
+
     if (!env)
     {
         use = 0;
@@ -357,6 +361,7 @@ STATIC INLINE int force_software_aes(void)
 STATIC INLINE int check_aes_hw(void)
 {
     int cpuid_results[4];
+
     static int supported = -1;
 
     if (supported >= 0)
@@ -369,6 +374,7 @@ STATIC INLINE int check_aes_hw(void)
 STATIC INLINE void aes_256_assist1(__m128i * t1, __m128i * t2)
 {
     __m128i t4;
+
     *t2 = _mm_shuffle_epi32(*t2, 0xff);
     t4 = _mm_slli_si128(*t1, 0x04);
     *t1 = _mm_xor_si128(*t1, t4);
@@ -382,6 +388,7 @@ STATIC INLINE void aes_256_assist1(__m128i * t1, __m128i * t2)
 STATIC INLINE void aes_256_assist2(__m128i * t1, __m128i * t3)
 {
     __m128i t2, t4;
+
     t4 = _mm_aeskeygenassist_si128(*t1, 0x00);
     t2 = _mm_shuffle_epi32(t4, 0xaa);
     t4 = _mm_slli_si128(*t3, 0x04);
@@ -416,6 +423,7 @@ STATIC INLINE void
 aes_expand_key(const uint8_t * key, uint8_t * expandedKey)
 {
     __m128i *ek = R128(expandedKey);
+
     __m128i t1, t2, t3;
 
     t1 = _mm_loadu_si128(R128(key));
@@ -476,7 +484,9 @@ aes_pseudo_round(const uint8_t * in, uint8_t * out,
                  const uint8_t * expandedKey, int nblocks)
 {
     __m128i *k = R128(expandedKey);
+
     __m128i d;
+
     int i;
 
     for (i = 0; i < nblocks; i++)
@@ -516,8 +526,11 @@ aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
                      int nblocks)
 {
     __m128i *k = R128(expandedKey);
+
     __m128i *x = R128(xor);
+
     __m128i d;
+
     int i;
 
     for (i = 0; i < nblocks; i++)
@@ -547,6 +560,7 @@ BOOL SetLockPagesPrivilege(HANDLE hProcess, BOOL bEnable)
     } info;
 
     HANDLE token;
+
     if (!OpenProcessToken(hProcess, TOKEN_ADJUST_PRIVILEGES, &token))
         return FALSE;
 
@@ -673,23 +687,35 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
              uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t TOTALBLOCKS = (page_size / AES_BLOCK_SIZE);
+
     uint32_t init_rounds = (scratchpad / INIT_SIZE_BYTE);
+
     uint32_t aes_rounds = (iterations / 2);
+
     size_t lightFlag = (light ? 2 : 1);
 
     RDATA_ALIGN16 uint8_t expandedKey[240];     /* These buffers are aligned to use later with SSE functions */
 
     uint8_t text[INIT_SIZE_BYTE];
+
     RDATA_ALIGN16 uint64_t a[2];
+
     RDATA_ALIGN16 uint64_t b[4];
+
     RDATA_ALIGN16 uint64_t c[2];
+
     union cn_slow_hash_state state;
+
     __m128i _a, _b, _b1, _c;
+
     uint64_t hi, lo;
 
     size_t i, j;
+
     uint64_t *p = NULL;
+
     oaes_ctx *aes_ctx = NULL;
+
     int useAes = !force_software_aes() && check_aes_hw();
 
     static void (*const extra_hashes[4]) (const void *, size_t, char *) =
@@ -856,6 +882,7 @@ union cn_slow_hash_state {
         uint8_t init[INIT_SIZE_BYTE];
     };
 };
+
 #pragma pack(pop)
 
 #if defined(__aarch64__) && defined(__ARM_FEATURE_CRYPTO)
@@ -929,11 +956,13 @@ aes_pseudo_round(const uint8_t * in, uint8_t * out,
     {
     0};
     uint8x16_t tmp;
+
     int i;
 
     for (i = 0; i < nblocks; i++)
     {
         uint8x16_t tmp = vld1q_u8(in + i * AES_BLOCK_SIZE);
+
         tmp = vaeseq_u8(tmp, zero);
         tmp = vaesmcq_u8(tmp);
         tmp = vaeseq_u8(tmp, k[0]);
@@ -965,13 +994,17 @@ aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
                      int nblocks)
 {
     const uint8x16_t *k = (const uint8x16_t *) expandedKey;
+
     const uint8x16_t *x = (const uint8x16_t *) xor;
+
     uint8x16_t tmp;
+
     int i;
 
     for (i = 0; i < nblocks; i++)
     {
         uint8x16_t tmp = vld1q_u8(in + i * AES_BLOCK_SIZE);
+
         tmp = vaeseq_u8(tmp, x[i]);
         tmp = vaesmcq_u8(tmp);
         tmp = vaeseq_u8(tmp, k[0]);
@@ -1001,6 +1034,7 @@ aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
 STATIC INLINE void *aligned_malloc(size_t size, size_t align)
 {
     void *result;
+
 #ifdef _MSC_VER
     result = _aligned_malloc(size, align);
 #else
@@ -1026,8 +1060,11 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
              uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t TOTALBLOCKS = (page_size / AES_BLOCK_SIZE);
+
     uint32_t init_rounds = (scratchpad / INIT_SIZE_BYTE);
+
     uint32_t aes_rounds = (iterations / 2);
+
     size_t lightFlag = (light ? 2 : 1);
 
     RDATA_ALIGN16 uint8_t expandedKey[240];
@@ -1040,14 +1077,19 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
 #endif
 
     uint8_t text[INIT_SIZE_BYTE];
+
     RDATA_ALIGN16 uint64_t a[2];
+
     RDATA_ALIGN16 uint64_t b[4];
+
     RDATA_ALIGN16 uint64_t c[2];
+
     union cn_slow_hash_state state;
     uint8x16_t _a, _b, _b1, _c, zero = { 0 };
     uint64_t hi, lo;
 
     size_t i, j;
+
     uint64_t *p = NULL;
 
     static void (*const extra_hashes[4]) (const void *, size_t, char *) =
@@ -1137,6 +1179,7 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
 //     Needs more work.
 
 #ifdef NO_OPTIMIZED_MULTIPLY_ON_ARM
+
 /* The asm corresponds to this C code */
 #define SHORT uint32_t
 #define LONG uint64_t
@@ -1144,15 +1187,22 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
 void mul(const uint8_t * ca, const uint8_t * cb, uint8_t * cres)
 {
     const SHORT *aa = (SHORT *) ca;
+
     const SHORT *bb = (SHORT *) cb;
+
     SHORT *res = (SHORT *) cres;
+
     union {
         SHORT tmp[8];
         LONG ltmp[4];
     } t;
+
     LONG A = aa[1];
+
     LONG a = aa[0];
+
     LONG B = bb[1];
+
     LONG b = bb[0];
 
     // Aa * Bb = ab + aB_ + Ab_ + AB__
@@ -1177,6 +1227,7 @@ void mul(const uint8_t * ca, const uint8_t * cb, uint8_t * cres)
 STATIC void cn_mul128(const uint64_t * a, const uint64_t * b, uint64_t * r)
 {
     uint64_t lo, hi;
+
   __asm__("mul %0, %1, %2\n\t": "=r"(lo):"r"(a[0]), "r"(b[0]));
   __asm__("umulh %0, %1, %2\n\t": "=r"(hi):"r"(a[0]), "r"(b[0]));
     r[0] = hi;
@@ -1188,6 +1239,7 @@ STATIC void
 cn_mul128(const uint32_t * aa, const uint32_t * bb, uint32_t * r)
 {
     uint32_t t0, t1, t2 = 0, t3 = 0;
+
     __asm__ __volatile__("umull %[t0], %[t1], %[a], %[b]\n\t"
                          "str   %[t0], %[ll]\n\t"
                          // accumulating with 0 can never overflow/carry
@@ -1217,6 +1269,7 @@ STATIC INLINE void copy_block(uint8_t * dst, const uint8_t * src)
 STATIC INLINE void sum_half_blocks(uint8_t * a, const uint8_t * b)
 {
     uint64_t a0, a1, b0, b1;
+
     a0 = U64(a)[0];
     a1 = U64(a)[1];
     b0 = U64(b)[0];
@@ -1230,6 +1283,7 @@ STATIC INLINE void sum_half_blocks(uint8_t * a, const uint8_t * b)
 STATIC INLINE void swap_blocks(uint8_t * a, uint8_t * b)
 {
     uint64_t t[2];
+
     U64(t)[0] = U64(a)[0];
     U64(t)[1] = U64(a)[1];
     U64(a)[0] = U64(b)[0];
@@ -1250,23 +1304,35 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
              uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t init_rounds = (scratchpad / INIT_SIZE_BYTE);
+
     uint32_t aes_rounds = (iterations / 2);
+
     size_t lightFlag = (light ? 2 : 1);
 
     uint8_t text[INIT_SIZE_BYTE];
+
     uint8_t a[AES_BLOCK_SIZE];
+
     uint8_t b[AES_BLOCK_SIZE * 2];
+
     uint8_t c[AES_BLOCK_SIZE];
+
     uint8_t c1[AES_BLOCK_SIZE];
+
     uint8_t d[AES_BLOCK_SIZE];
+
     uint8_t aes_key[AES_KEY_SIZE];
+
     RDATA_ALIGN16 uint8_t expandedKey[256];
 
     union cn_slow_hash_state state;
 
     size_t i, j;
+
     uint8_t *p = NULL;
+
     oaes_ctx *aes_ctx;
+
     static void (*const extra_hashes[4]) (const void *, size_t, char *) =
     {
     hash_extra_blake, hash_extra_groestl, hash_extra_jh,
@@ -1405,6 +1471,7 @@ static size_t e2i(const uint8_t * a, size_t count)
 static void mul(const uint8_t * a, const uint8_t * b, uint8_t * res)
 {
     uint64_t a0, b0;
+
     uint64_t hi, lo;
 
     a0 = SWAP64LE(((uint64_t *) a)[0]);
@@ -1438,6 +1505,7 @@ static void copy_block(uint8_t * dst, const uint8_t * src)
 static void swap_blocks(uint8_t * a, uint8_t * b)
 {
     uint64_t t[2];
+
     U64(t)[0] = U64(a)[0];
     U64(t)[1] = U64(a)[1];
     U64(a)[0] = U64(b)[0];
@@ -1449,6 +1517,7 @@ static void swap_blocks(uint8_t * a, uint8_t * b)
 static void xor_blocks(uint8_t * a, const uint8_t * b)
 {
     size_t i;
+
     for (i = 0; i < AES_BLOCK_SIZE; i++)
     {
         a[i] ^= b[i];
@@ -1458,6 +1527,7 @@ static void xor_blocks(uint8_t * a, const uint8_t * b)
 static void xor64(uint8_t * left, const uint8_t * right)
 {
     size_t i;
+
     for (i = 0; i < 8; ++i)
     {
         left[i] ^= right[i];
@@ -1472,6 +1542,7 @@ union cn_slow_hash_state {
         uint8_t init[INIT_SIZE_BYTE];
     };
 };
+
 #pragma pack(pop)
 
 void
@@ -1480,7 +1551,9 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
              uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t init_rounds = (scratchpad / INIT_SIZE_BYTE);
+
     uint32_t aes_rounds = (iterations / 2);
+
     size_t aes_init = (page_size / AES_BLOCK_SIZE);
 
 #ifndef FORCE_USE_HEAP
@@ -1491,14 +1564,23 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
 #endif
 
     union cn_slow_hash_state state;
+
     uint8_t text[INIT_SIZE_BYTE];
+
     uint8_t a[AES_BLOCK_SIZE];
+
     uint8_t b[AES_BLOCK_SIZE * 2];
+
     uint8_t c1[AES_BLOCK_SIZE];
+
     uint8_t c2[AES_BLOCK_SIZE];
+
     uint8_t d[AES_BLOCK_SIZE];
+
     size_t i, j;
+
     uint8_t aes_key[AES_KEY_SIZE];
+
     oaes_ctx *aes_ctx;
 
     if (prehashed)

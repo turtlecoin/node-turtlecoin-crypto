@@ -62,7 +62,9 @@
 #define ptr_cast(x,size)            ((ui_type(size)*)(x))
 
 typedef unsigned int uint_t;    /* native unsigned integer */
+
 typedef uint8_t u08b_t;         /*  8-bit unsigned integer */
+
 typedef uint64_t u64b_t;        /* 64-bit unsigned integer */
 
 #ifndef RotL_64
@@ -105,6 +107,7 @@ typedef uint64_t u64b_t;        /* 64-bit unsigned integer */
 #endif
 
 /* special handler for IA64, which may be either endianness (?)  */
+
 /* here we assume little-endian, but this may need to be changed */
 #if defined(__ia64) || defined(__ia64__) || defined(_M_IA64)
 #  define PLATFORM_MUST_ALIGN (1)

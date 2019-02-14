@@ -1,5 +1,6 @@
 #ifndef _SKEIN_H_
 #define _SKEIN_H_     1
+
 /**************************************************************************
 **
 ** Interface declarations and internal definitions for Skein hashing.
@@ -39,6 +40,7 @@ typedef enum {
 } HashReturn;
 
 typedef size_t DataLength;      /* bit count  type */
+
 typedef u08b_t BitSequence;     /* bit stream type */
 
 /* "all-in-one" call */

@@ -34,6 +34,7 @@ const int keccakf_piln[24] = {
 void keccakf(uint64_t st[25], int rounds)
 {
     int i, j, round;
+
     uint64_t t, bc[5];
 
     for (round = 0; round < rounds; round++)
@@ -81,7 +82,9 @@ typedef uint64_t state_t[25];
 int keccak(const uint8_t * in, int inlen, uint8_t * md, int mdlen)
 {
     state_t st;
+
     uint8_t temp[144];
+
     int i, rsiz, rsizw;
 
 

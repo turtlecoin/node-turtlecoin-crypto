@@ -1,3 +1,4 @@
+
 /* hash.c     April 2012
  * Groestl ANSI C code optimised for 32-bit machines
  * Author: Thomas Krinninger
@@ -72,7 +73,9 @@ const uint8_t indices_cyclic[15] =
 static void RND512P(uint8_t * x, uint32_t * y, uint32_t r)
 {
     uint32_t temp_v1, temp_v2, temp_upper_value, temp_lower_value, temp;
+
     uint32_t *x32 = (uint32_t *) x;
+
     x32[0] ^= 0x00000000 ^ r;
     x32[2] ^= 0x00000010 ^ r;
     x32[4] ^= 0x00000020 ^ r;
@@ -103,7 +106,9 @@ static void RND512P(uint8_t * x, uint32_t * y, uint32_t r)
 static void RND512Q(uint8_t * x, uint32_t * y, uint32_t r)
 {
     uint32_t temp_v1, temp_v2, temp_upper_value, temp_lower_value, temp;
+
     uint32_t *x32 = (uint32_t *) x;
+
     x32[0] = ~x32[0];
     x32[1] ^= 0xffffffff ^ r;
     x32[2] = ~x32[2];
@@ -142,9 +147,13 @@ static void RND512Q(uint8_t * x, uint32_t * y, uint32_t r)
 static void F512(uint32_t * h, const uint32_t * m)
 {
     int i;
+
     uint32_t Ptmp[2 * COLS512];
+
     uint32_t Qtmp[2 * COLS512];
+
     uint32_t y[2 * COLS512];
+
     uint32_t z[2 * COLS512];
 
     for (i = 0; i < 2 * COLS512; i++)
@@ -205,8 +214,11 @@ static void Transform(hashState * ctx, const uint8_t * input, int msglen)
 static void OutputTransformation(hashState * ctx)
 {
     int j;
+
     uint32_t temp[2 * COLS512];
+
     uint32_t y[2 * COLS512];
+
     uint32_t z[2 * COLS512];
 
 
@@ -235,6 +247,7 @@ static void OutputTransformation(hashState * ctx)
 static void Init(hashState * ctx)
 {
     unsigned int i = 0;
+
     /* allocate memory for state and data buffer */
 
     for (; i < (SIZE512 / sizeof(uint32_t)); i++)
@@ -257,7 +270,9 @@ static void
 Update(hashState * ctx, const BitSequence * input, DataLength databitlen)
 {
     int index = 0;
+
     int msglen = (int) (databitlen / 8);
+
     int rem = (int) (databitlen % 8);
 
     /* if the buffer contains data that has not yet been digested, first
@@ -311,6 +326,7 @@ Update(hashState * ctx, const BitSequence * input, DataLength databitlen)
 static void Final(hashState * ctx, BitSequence * output)
 {
     int i, j = 0, hashbytelen = HASH_BIT_LEN / 8;
+
     uint8_t *s = (BitSequence *) ctx->chaining;
 
     /* pad with '1'-bit and first few '0'-bits */
