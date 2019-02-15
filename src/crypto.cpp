@@ -45,6 +45,15 @@ namespace Crypto {
         sc_reduce32(reinterpret_cast < unsigned char *>(&res));
     }
 
+    void crypto_ops::hashToScalar(const void *data, size_t length,
+                                  EllipticCurveScalar & res) {
+        hash_to_scalar(data, length, res);
+    }
+
+    void crypto_ops::scReduce32(EllipticCurveScalar & scalar) {
+        sc_reduce32(reinterpret_cast < unsigned char *>(&scalar));
+    }
+
     void crypto_ops::generate_keys(PublicKey & pub, SecretKey & sec) {
         lock_guard < mutex > lock(random_lock);
         ge_p3 point;

@@ -718,6 +718,74 @@ void cn_turtle_lite_slow_hash_v2(const Nan::FunctionCallbackInfo <
     info.GetReturnValue().Set(Nan::Undefined());
 }
 
+void scReduce32(const Nan::FunctionCallbackInfo < v8::Value > &info)
+{
+    std::string data = std::string();
+    std::string scalar = std::string();
+
+    if (info.Length() == 1)
+    {
+        data = std::string(*Nan::Utf8String(info[0]->ToString()));
+    }
+
+    if (!data.empty())
+    {
+        Crypto::EllipticCurveScalar l_scalar;
+        Common::podFromHex(data, l_scalar);
+
+        try
+        {
+            Crypto::scReduce32(l_scalar);
+        }
+        catch(const std::exception & e) {
+            return Nan::ThrowError(e.what());
+        }
+
+        scalar = Common::podToHex(l_scalar);
+        v8::Local < v8::String > returnValue =
+            Nan::New(scalar).ToLocalChecked();
+
+        info.GetReturnValue().Set(returnValue);
+        return;
+    }
+
+    info.GetReturnValue().Set(Nan::Undefined());
+}
+
+void hashToScalar(const Nan::FunctionCallbackInfo < v8::Value > &info)
+{
+    std::string data = std::string();
+    std::string scalar = std::string();
+
+    if (info.Length() == 1)
+    {
+        data = std::string(*Nan::Utf8String(info[0]->ToString()));
+    }
+
+    if (!data.empty())
+    {
+        const BinaryArray & rawData = Common::fromHex(data);
+
+        Crypto::EllipticCurveScalar l_scalar;
+
+        try
+        {
+            Crypto::hashToScalar(data.data(), data.size(), l_scalar);
+        } catch(const std::exception & e) {
+            return Nan::ThrowError(e.what());
+        }
+
+        scalar = Common::podToHex(l_scalar);
+        v8::Local < v8::String > returnValue =
+            Nan::New(scalar).ToLocalChecked();
+
+        info.GetReturnValue().Set(returnValue);
+        return;
+    }
+
+    info.GetReturnValue().Set(Nan::Undefined());
+}
+
 void InitModule(v8::Local < v8::Object > exports)
 {
     exports->Set(Nan::New("checkKey").ToLocalChecked(),
@@ -779,6 +847,14 @@ void InitModule(v8::Local < v8::Object > exports)
     exports->Set(Nan::New("underivePublicKey").ToLocalChecked(),
                  Nan::New < v8::FunctionTemplate >
                  (underivePublicKey)->GetFunction());
+
+    exports->Set(Nan::New("scReduce32").ToLocalChecked(),
+                 Nan::New < v8::FunctionTemplate >
+                 (scReduce32)->GetFunction());
+
+    exports->Set(Nan::New("hashToScalar").ToLocalChecked(),
+                 Nan::New < v8::FunctionTemplate >
+                 (hashToScalar)->GetFunction());
 }
 
 NODE_MODULE(turtlecoincrypto, InitModule);
