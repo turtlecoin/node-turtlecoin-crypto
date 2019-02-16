@@ -14,8 +14,7 @@ This project is designed to expose the necessary C++ cryptographic methods from 
 
 ## Dependencies
 
-* GCC-7 or higher (requires C++17 support)
-* [NodeJS v8.x](https://nodejs.org) >= +8.x
+* [Node.js](https://nodejs.org) >= +6.x
 
 ### Windows
 
@@ -30,8 +29,6 @@ Read very careful if you want this to work right the first time.
 ## Installation
 
 ```bash
-export CC=gcc-7
-export CXX=g++-7
 npm install turtlecoin-crypto
 ```
 
