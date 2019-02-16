@@ -24,8 +24,10 @@ static inline const void *cpadd(const void *p, size_t i)
     return (const char *) p + i;
 }
 
+#ifndef NDEBUG
 static_assert(sizeof(size_t) == 4
               || sizeof(size_t) == 8, "size_t must be 4 or 8 bytes long");
+#endif
 static inline void
 place_length(uint8_t * buffer, size_t bufsize, size_t length)
 {
@@ -46,7 +48,9 @@ union hash_state {
 };
 
 #pragma pack(pop)
+#ifndef NDEBUG
 static_assert(sizeof(union hash_state) == 200, "Invalid structure size");
+#endif
 
 void hash_permutation(union hash_state *state);
 

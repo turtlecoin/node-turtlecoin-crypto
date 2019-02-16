@@ -37,8 +37,10 @@ namespace Crypto {
 
         static void scReduce32(EllipticCurveScalar &);
         friend void scReduce32(EllipticCurveScalar &);
-        static void hashToScalar(const void *, std::size_t, EllipticCurveScalar & res);
-        friend void hashToScalar(const void *, std::size_t, EllipticCurveScalar & res);
+        static void hashToScalar(const void *, std::size_t,
+                                 EllipticCurveScalar & res);
+        friend void hashToScalar(const void *, std::size_t,
+                                 EllipticCurveScalar & res);
         static void generate_keys(PublicKey &, SecretKey &);
         friend void generate_keys(PublicKey &, SecretKey &);
         static void generate_deterministic_keys(PublicKey & pub,
@@ -133,15 +135,14 @@ namespace Crypto {
 
       public:
 
-        static std::tuple < bool,
-            std::vector <
-            Signature >> generateRingSignatures(const Hash prefixHash,
-                                                const KeyImage keyImage,
-                                                const std::vector <
-                                                PublicKey > publicKeys,
-                                                const Crypto::SecretKey
-                                                transactionSecretKey,
-                                                uint64_t realOutput);
+        static bool generateRingSignatures(const Hash prefixHash,
+                                           const KeyImage keyImage,
+                                           const std::vector <
+                                           PublicKey > publicKeys,
+                                           const Crypto::SecretKey
+                                           transactionSecretKey,
+                                           uint64_t realOutput,
+                                           std::vector < Signature > &);
 
         static bool checkRingSignature(const Hash & prefix_hash,
                                        const KeyImage & image,
@@ -316,12 +317,13 @@ namespace Crypto {
                                 PublicKey & key) {
         crypto_ops::hash_data_to_ec(data, len, key);
     }
-    
-    inline void scReduce32(EllipticCurveScalar &data) {
-      crypto_ops::scReduce32(data);
+
+    inline void scReduce32(EllipticCurveScalar & data) {
+        crypto_ops::scReduce32(data);
     }
-    
-    inline void hashToScalar(const void *data , std::size_t len, EllipticCurveScalar & res) {
-      crypto_ops::hashToScalar(data, len, res);
+
+    inline void hashToScalar(const void *data, std::size_t len,
+                             EllipticCurveScalar & res) {
+        crypto_ops::hashToScalar(data, len, res);
     }
 }

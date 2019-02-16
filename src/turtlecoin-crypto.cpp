@@ -248,12 +248,15 @@ void generateRingSignatures(const Nan::FunctionCallbackInfo <
             Common::podFromHex(transactionSecretKey,
                                c_transactionSecretKey);
 
-            const auto[success, c_sigs] =
+            std::vector < Crypto::Signature > c_sigs;
+
+            const bool success =
                 Crypto::crypto_ops::generateRingSignatures(c_prefixHash,
                                                            c_keyImage,
                                                            publicKeys,
                                                            c_transactionSecretKey,
-                                                           realOutput);
+                                                           realOutput,
+                                                           c_sigs);
 
             if (success)
             {
@@ -770,7 +773,7 @@ void hashToScalar(const Nan::FunctionCallbackInfo < v8::Value > &info)
 
         try
         {
-            Crypto::hashToScalar(data.data(), data.size(), l_scalar);
+            Crypto::hashToScalar(rawData.data(), rawData.size(), l_scalar);
         } catch(const std::exception & e) {
             return Nan::ThrowError(e.what());
         }

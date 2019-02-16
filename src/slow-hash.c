@@ -1556,12 +1556,7 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
 
     size_t aes_init = (page_size / AES_BLOCK_SIZE);
 
-#ifndef FORCE_USE_HEAP
-    uint8_t long_state[page_size];
-#else
-#warning "ACTIVATING FORCE_USE_HEAP IN portable slow-hash.c"
     uint8_t *long_state = (uint8_t *) malloc(page_size);
-#endif
 
     union cn_slow_hash_state state;
 
@@ -1673,9 +1668,7 @@ cn_slow_hash(const void *data, size_t length, char *hash, int light,
     extra_hashes[state.hs.b[0] & 3] (&state, 200, hash);
     oaes_free((OAES_CTX **) & aes_ctx);
 
-#ifdef FORCE_USE_HEAP
     free(long_state);
-#endif
 }
 
 #endif

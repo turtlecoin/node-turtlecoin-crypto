@@ -4,8 +4,6 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - ps: npm install -g windows-build-tools --vs2015
-  - npm config -g set msvs_version 2015
   - npm install
   - npm test
 

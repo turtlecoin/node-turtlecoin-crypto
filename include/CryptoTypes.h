@@ -20,11 +20,9 @@ namespace Crypto {
         bool operator==(const Hash & other) const {
             return std::equal(std::begin(data), std::end(data),
                               std::begin(other.data));
-        }
-        bool operator!=(const Hash & other) const {
+        } bool operator!=(const Hash & other) const {
             return !(*this == other);
-        }
-        uint8_t data[32];
+        } uint8_t data[32];
     };
 
     struct PublicKey {
@@ -38,11 +36,9 @@ namespace Crypto {
         bool operator==(const PublicKey & other) const {
             return std::equal(std::begin(data), std::end(data),
                               std::begin(other.data));
-        }
-        bool operator!=(const PublicKey & other) const {
+        } bool operator!=(const PublicKey & other) const {
             return !(*this == other);
-        }
-        uint8_t data[32];
+        } uint8_t data[32];
     };
 
     struct SecretKey {
@@ -58,11 +54,9 @@ namespace Crypto {
         bool operator==(const SecretKey & other) const {
             return std::equal(std::begin(data), std::end(data),
                               std::begin(other.data));
-        }
-        bool operator!=(const SecretKey & other) const {
+        } bool operator!=(const SecretKey & other) const {
             return !(*this == other);
-        }
-        uint8_t data[32];
+        } uint8_t data[32];
     };
 
     struct KeyDerivation {
@@ -78,11 +72,9 @@ namespace Crypto {
         bool operator==(const KeyDerivation & other) const {
             return std::equal(std::begin(data), std::end(data),
                               std::begin(other.data));
-        }
-        bool operator!=(const KeyDerivation & other) const {
+        } bool operator!=(const KeyDerivation & other) const {
             return !(*this == other);
-        }
-        uint8_t data[32];
+        } uint8_t data[32];
     };
 
     struct KeyImage {
@@ -98,11 +90,9 @@ namespace Crypto {
         bool operator==(const KeyImage & other) const {
             return std::equal(std::begin(data), std::end(data),
                               std::begin(other.data));
-        }
-        bool operator!=(const KeyImage & other) const {
+        } bool operator!=(const KeyImage & other) const {
             return !(*this == other);
-        }
-        uint8_t data[32];
+        } uint8_t data[32];
     };
 
     struct Signature {
@@ -118,11 +108,9 @@ namespace Crypto {
         bool operator==(const Signature & other) const {
             return std::equal(std::begin(data), std::end(data),
                               std::begin(other.data));
-        }
-        bool operator!=(const Signature & other) const {
+        } bool operator!=(const Signature & other) const {
             return !(*this == other);
-        }
-        uint8_t data[64];
+        } uint8_t data[64];
     };
 
     /* For boost hash_value */

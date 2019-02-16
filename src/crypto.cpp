@@ -161,7 +161,8 @@ namespace Crypto {
         struct {
             KeyDerivation derivation;
             char output_index[(sizeof(size_t) * 8 + 6) / 7];
-        } buf;
+        }
+        buf;
 
         char *end = buf.output_index;
 
@@ -180,7 +181,8 @@ namespace Crypto {
         struct {
             KeyDerivation derivation;
             char output_index[(sizeof(size_t) * 8 + 6) / 7 + 32];
-        } buf;
+        }
+        buf;
 
         char *end = buf.output_index;
 
@@ -578,20 +580,19 @@ namespace Crypto {
             pubs_count * sizeof(((rs_comm *) 0)->ab[0]);
     }
 
-    std::tuple < bool,
-        std::vector <
-        Signature >> crypto_ops::generateRingSignatures(const Hash
-                                                        prefixHash,
-                                                        const KeyImage
-                                                        keyImage,
-                                                        const std::vector <
-                                                        PublicKey >
-                                                        publicKeys, const
-                                                        Crypto::SecretKey
-                                                        transactionSecretKey,
-                                                        uint64_t
-                                                        realOutput) {
-        std::vector < Signature > signatures(publicKeys.size());
+    bool crypto_ops::generateRingSignatures(const Hash
+                                            prefixHash,
+                                            const KeyImage
+                                            keyImage,
+                                            const std::vector <
+                                            PublicKey > publicKeys, const
+                                            Crypto::SecretKey
+                                            transactionSecretKey,
+                                            uint64_t realOutput,
+                                            std::vector < Signature >
+                                            &signatures) {
+        signatures.clear();
+        signatures.resize(publicKeys.size());
 
         lock_guard < mutex > lock(random_lock);
 
@@ -609,9 +610,7 @@ namespace Crypto {
             (&image_unp,
              reinterpret_cast < const unsigned char *>(&keyImage)) != 0)
         {
-            return
-            {
-            false, signatures};
+            return false;
         }
 
         ge_dsm_precomp(image_pre, &image_unp);
@@ -655,9 +654,7 @@ namespace Crypto {
                      reinterpret_cast <
                      const unsigned char *>(&publicKeys[i])) != 0)
                 {
-                    return
-                    {
-                    false, signatures};
+                    return false;
                 }
 
                 ge_double_scalarmult_base_vartime(&tmp2,
@@ -709,9 +706,7 @@ namespace Crypto {
                   const unsigned char *>(&transactionSecretKey),
                   reinterpret_cast < unsigned char *>(&k));
 
-        return
-        {
-        true, signatures};
+        return true;
     }
 
     bool crypto_ops::checkRingSignature(const Hash & prefix_hash,

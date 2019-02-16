@@ -343,8 +343,8 @@ namespace Common {
         ss << "d" << days <<
             std::setfill('0') <<
             ".h" << std::setw(2) << hours <<
-            ".m" << std::setw(2) << minutes << ".s" << std::
-            setw(2) << seconds;
+            ".m" << std::
+            setw(2) << minutes << ".s" << std::setw(2) << seconds;
 
         return ss.str();
     }
