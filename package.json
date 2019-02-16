@@ -1,7 +1,7 @@
 {
   "name": "turtlecoin-crypto",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Node C++ Addon for TurtleCoin Cryptographic Functions",
   "main": "index.js",
   "scripts": {
     "build": "node-gyp build",
