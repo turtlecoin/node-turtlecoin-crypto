@@ -1,6 +1,9 @@
 [![NPM](https://nodei.co/npm/turtlecoin-crypto.png?downloads=true&stars=true)](https://nodei.co/npm/turtlecoin-crypto/)
 
-[![Build Status](https://travis-ci.org/turtlecoin/turtlecoin-crypto.png?branch=master)](https://travis-ci.org/turtlecoin/turtlecoin-crypto)
+[![Build Status](https://travis-ci.org/turtlecoin/node-turtlecoin-crypto.png?branch=master)](https://travis-ci.org/turtlecoin/node-turtlecoin-crypto) [![Build status](https://ci.appveyor.com/api/projects/status/github/turtlecoin/node-turtlecoin-crypto?branch=master&svg=true)](https://ci.appveyor.com/project/brandonlehmann/node-turtlecoin-crypto)
+
+#### Development Build Status
+[![Build Status](https://travis-ci.org/turtlecoin/node-turtlecoin-crypto.svg?branch=development)](https://travis-ci.org/turtlecoin/node-turtlecoin-crypto) [![Build status](https://ci.appveyor.com/api/projects/status/github/turtlecoin/node-turtlecoin-crypto?branch=development&svg=true)](https://ci.appveyor.com/project/brandonlehmann/node-turtlecoin-crypto)
 
 # TurtleCoin Crypto Node Module
 
