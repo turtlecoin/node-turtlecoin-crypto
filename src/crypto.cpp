@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2012-2018, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2016-2018, The Karbowanec developers
 // Copyright (c) 2018-2019, The TurtleCoin Developers
@@ -148,7 +148,7 @@ namespace Crypto {
         ge_scalarmult(&point2,
                       reinterpret_cast < const unsigned char *>(&key2),
                       &point);
-        ge_mul8(&point3, &point2);
+        ge_mul8_p2(&point3, &point2);
         ge_p1p1_to_p2(&point2, &point3);
         ge_tobytes(reinterpret_cast < unsigned char *>(&derivation),
                    &point2);
@@ -508,7 +508,7 @@ namespace Crypto {
         ge_fromfe_frombytes_vartime(&point,
                                     reinterpret_cast <
                                     const unsigned char *>(&h));
-        ge_mul8(&point2, &point);
+        ge_mul8_p2(&point2, &point);
         ge_p1p1_to_p3(&res, &point2);
     }
 
@@ -543,7 +543,7 @@ namespace Crypto {
         ge_fromfe_frombytes_vartime(&point,
                                     reinterpret_cast <
                                     const unsigned char *>(&h));
-        ge_mul8(&point2, &point);
+        ge_mul8_p2(&point2, &point);
         ge_p1p1_to_p2(&point, &point2);
         ge_tobytes(reinterpret_cast < unsigned char *>(&key), &point);
     }
