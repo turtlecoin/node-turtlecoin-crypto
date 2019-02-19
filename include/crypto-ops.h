@@ -1,4 +1,5 @@
-// Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2012-2018, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018-2019, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
@@ -60,6 +61,8 @@ void ge_double_scalarmult_base_vartime(ge_p2 *, const unsigned char *,
                                        const ge_p3 *,
                                        const unsigned char *);
 
+void ge_double_scalarmult_base_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *);
+
 /* From ge_frombytes.c, modified */
 
 extern const fe fe_sqrtm1;
@@ -116,13 +119,21 @@ void sc_reduce(unsigned char *);
 
 void ge_scalarmult(ge_p2 *, const unsigned char *, const ge_p3 *);
 
-void ge_double_scalarmult_precomp_vartime(ge_p2 *, const unsigned char *,
-                                          const ge_p3 *,
-                                          const unsigned char *,
-                                          const ge_dsmp);
+void ge_scalarmult_p3(ge_p3 *, const unsigned char *, const ge_p3 *);
+
+void ge_double_scalarmult_precomp_vartime(ge_p2 *, const unsigned char *, const ge_p3 *, const unsigned char *, const ge_dsmp);
+
+void ge_double_scalarmult_precomp_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *, const ge_dsmp);
+
+void ge_double_scalarmult_precomp_vartime2(ge_p2 *, const unsigned char *, const ge_dsmp, const unsigned char *, const ge_dsmp);
+
+void ge_double_scalarmult_precomp_vartime2_p3(ge_p3 *, const unsigned char *, const ge_dsmp, const unsigned char *, const ge_dsmp);
+
 int ge_check_subgroup_precomp_vartime(const ge_dsmp);
 
-void ge_mul8(ge_p1p1 *, const ge_p2 *);
+void ge_mul8(ge_p1p1 *, const ge_p3 *);
+
+void ge_mul8_p2(ge_p1p1 *, const ge_p2 *);
 
 extern const fe fe_ma2;
 
@@ -136,18 +147,43 @@ extern const fe fe_fffb3;
 
 extern const fe fe_fffb4;
 
+extern const ge_p3 ge_p3_identity;
+
+extern const ge_p3 ge_p3_H;
+
 void ge_fromfe_frombytes_vartime(ge_p2 *, const unsigned char *);
 
 void sc_0(unsigned char *);
 
+void sc_1(unsigned char *);
+
 void sc_reduce32(unsigned char *);
+
+void sc_reduce64(unsigned char *, const unsigned char[64]);
 
 void sc_add(unsigned char *, const unsigned char *, const unsigned char *);
 
 void sc_sub(unsigned char *, const unsigned char *, const unsigned char *);
 
-void sc_mulsub(unsigned char *, const unsigned char *,
-               const unsigned char *, const unsigned char *);
+void sc_mulsub(unsigned char *, const unsigned char *, const unsigned char *,
+               const unsigned char *);
+
+void sc_mul(unsigned char *, const unsigned char *, const unsigned char *);
+
+void sc_muladd(unsigned char *, const unsigned char *, const unsigned char *, const unsigned char *);
+
+void sc_invert(unsigned char *, const unsigned char *);
+
+int sc_isvalid_vartime(const unsigned char *);
+
 int sc_check(const unsigned char *);
 
 int sc_isnonzero(const unsigned char *);        /* Doesn't normalize */
+
+int sc_iszero(const unsigned char *);
+
+void fe_add(fe, const fe, const fe);
+
+void fe_tobytes(unsigned char *, const fe);
+
+void fe_invert(fe, const fe);
