@@ -15,8 +15,6 @@ static void fe_mul(fe, const fe, const fe);
 
 static void fe_sq(fe, const fe);
 
-static void fe_tobytes(unsigned char *, const fe);
-
 static void ge_madd(ge_p1p1 *, const ge_p3 *, const ge_precomp *);
 
 static void ge_msub(ge_p1p1 *, const ge_p3 *, const ge_precomp *);
@@ -6051,7 +6049,8 @@ void sc_muladd(unsigned char *s, const unsigned char *a, const unsigned char *b,
 static void sc_invert_helper(unsigned char *rr, const unsigned char *xx,
                              uint8_t bits)
 {
-  for (unsigned i = 8; i-- > 0;)
+  unsigned i;
+  for (i = 8; i-- > 0;)
   {
     sc_mul(rr, rr, rr);
     if (bits & (1U << i))
@@ -6063,10 +6062,11 @@ void sc_invert(unsigned char *rr, const unsigned char *xx)
 {
   unsigned char crypto_L[32];
 
-  *rr = *xx;                    // first bit
-  for (int i = 0; i != 124; ++i)        // 124 zero bits
+  *rr = *xx;                   // first bit
+  int i;
+  for (i = 0; i != 124; ++i)        // 124 zero bits
     sc_mul(rr, rr, rr);
-  for (int i = 15; i != 0; --i)
+  for (i = 15; i != 0; --i)
     sc_invert_helper(rr, xx, crypto_L[i]);
   sc_invert_helper(rr, xx, crypto_L[0] - 2);    // inv(x) = x^(L-2)
 }
