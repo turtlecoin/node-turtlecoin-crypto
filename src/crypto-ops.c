@@ -104,7 +104,7 @@ Postconditions:
    |h| bounded by 1.1*2^26,1.1*2^25,1.1*2^26,1.1*2^25,etc.
 */
 
-static void fe_add(fe h, const fe f, const fe g)
+void fe_add(fe h, const fe f, const fe g)
 {
     int32_t f0 = f[0];
 
@@ -315,7 +315,7 @@ static void fe_copy(fe h, const fe f)
 
 /* From fe_invert.c */
 
-static void fe_invert(fe out, const fe z)
+void fe_invert(fe out, const fe z)
 {
     fe t0;
 
@@ -1591,7 +1591,7 @@ Proof:
   so floor(2^(-255)(h + 19 2^(-25) h9 + 2^(-1))) = q.
 */
 
-static void fe_tobytes(unsigned char *s, const fe h)
+void fe_tobytes(unsigned char *s, const fe h)
 {
     int32_t h0 = h[0];
 
