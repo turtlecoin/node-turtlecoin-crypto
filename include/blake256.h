@@ -8,13 +8,15 @@
 
 #include <stdint.h>
 
-typedef struct {
+typedef struct
+{
     uint32_t h[8], s[4], t[2];
     int buflen, nullt;
     uint8_t buf[64];
 } state;
 
-typedef struct {
+typedef struct
+{
     state inner;
     state outer;
 } hmac_state;
@@ -35,7 +37,6 @@ void hmac_blake256_update(hmac_state *, const uint8_t *, uint64_t);
 
 void hmac_blake256_final(hmac_state *, uint8_t *);
 
-void hmac_blake256_hash(uint8_t *, const uint8_t *, uint64_t,
-                        const uint8_t *, uint64_t);
+void hmac_blake256_hash(uint8_t *, const uint8_t *, uint64_t, const uint8_t *, uint64_t);
 
-#endif                          /* _BLAKE256_H_ */
+#endif /* _BLAKE256_H_ */

@@ -12,33 +12,38 @@ typedef int32_t fe[10];
 
 /* From ge.h */
 
-typedef struct {
+typedef struct
+{
     fe X;
     fe Y;
     fe Z;
 } ge_p2;
 
-typedef struct {
+typedef struct
+{
     fe X;
     fe Y;
     fe Z;
     fe T;
 } ge_p3;
 
-typedef struct {
+typedef struct
+{
     fe X;
     fe Y;
     fe Z;
     fe T;
 } ge_p1p1;
 
-typedef struct {
+typedef struct
+{
     fe yplusx;
     fe yminusx;
     fe xy2d;
 } ge_precomp;
 
-typedef struct {
+typedef struct
+{
     fe YplusX;
     fe YminusX;
     fe Z;
@@ -55,11 +60,9 @@ typedef ge_cached ge_dsmp[8];
 
 extern const ge_precomp ge_Bi[8];
 
-void ge_dsm_precomp(ge_dsmp r, const ge_p3 * s);
+void ge_dsm_precomp(ge_dsmp r, const ge_p3 *s);
 
-void ge_double_scalarmult_base_vartime(ge_p2 *, const unsigned char *,
-                                       const ge_p3 *,
-                                       const unsigned char *);
+void ge_double_scalarmult_base_vartime(ge_p2 *, const unsigned char *, const ge_p3 *, const unsigned char *);
 
 void ge_double_scalarmult_base_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *);
 
@@ -121,13 +124,17 @@ void ge_scalarmult(ge_p2 *, const unsigned char *, const ge_p3 *);
 
 void ge_scalarmult_p3(ge_p3 *, const unsigned char *, const ge_p3 *);
 
-void ge_double_scalarmult_precomp_vartime(ge_p2 *, const unsigned char *, const ge_p3 *, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime(ge_p2 *, const unsigned char *, const ge_p3 *, const unsigned char *,
+                                          const ge_dsmp);
 
-void ge_double_scalarmult_precomp_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *,
+                                             const ge_dsmp);
 
-void ge_double_scalarmult_precomp_vartime2(ge_p2 *, const unsigned char *, const ge_dsmp, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime2(ge_p2 *, const unsigned char *, const ge_dsmp, const unsigned char *,
+                                           const ge_dsmp);
 
-void ge_double_scalarmult_precomp_vartime2_p3(ge_p3 *, const unsigned char *, const ge_dsmp, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime2_p3(ge_p3 *, const unsigned char *, const ge_dsmp, const unsigned char *,
+                                              const ge_dsmp);
 
 int ge_check_subgroup_precomp_vartime(const ge_dsmp);
 
@@ -161,12 +168,13 @@ void sc_reduce32(unsigned char *);
 
 void sc_reduce64(unsigned char *, const unsigned char[64]);
 
+void sc_reduce32copy(unsigned char *, const unsigned char *);
+
 void sc_add(unsigned char *, const unsigned char *, const unsigned char *);
 
 void sc_sub(unsigned char *, const unsigned char *, const unsigned char *);
 
-void sc_mulsub(unsigned char *, const unsigned char *, const unsigned char *,
-               const unsigned char *);
+void sc_mulsub(unsigned char *, const unsigned char *, const unsigned char *, const unsigned char *);
 
 void sc_mul(unsigned char *, const unsigned char *, const unsigned char *);
 
@@ -178,7 +186,7 @@ int sc_isvalid_vartime(const unsigned char *);
 
 int sc_check(const unsigned char *);
 
-int sc_isnonzero(const unsigned char *);        /* Doesn't normalize */
+int sc_isnonzero(const unsigned char *); /* Doesn't normalize */
 
 int sc_iszero(const unsigned char *);
 
