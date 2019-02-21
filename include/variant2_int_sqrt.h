@@ -52,6 +52,7 @@
 static inline uint32_t integer_square_root_v2(uint64_t n)
 {
     uint64_t r = 1ULL << 63;
+
     uint64_t bit;
 
     for (bit = 1ULL << 60; bit; bit >>= 2)

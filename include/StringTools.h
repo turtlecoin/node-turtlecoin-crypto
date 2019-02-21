@@ -28,7 +28,8 @@ namespace Common {
         uint64_t outSize;
          return fromHex(text, &val, sizeof(val), outSize)
             && outSize == sizeof(val);
-    } std::string toHex(const void *data, uint64_t size);       // Returns hex representation of ('data', 'size'), does not throw
+    }
+    std::string toHex(const void *data, uint64_t size); // Returns hex representation of ('data', 'size'), does not throw
 
     void toHex(const void *data, uint64_t size, std::string & text);    // Appends hex representation of ('data', 'size') to 'text', does not throw
 
