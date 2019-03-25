@@ -1,7 +1,7 @@
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2014-2018, The Aeon Project
-// Copyright (c) 2018-2019, The TurtleCoin Developers
+// Copyright (c) 2018, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
 
@@ -419,8 +419,8 @@ STATIC INLINE void aes_256_assist2(__m128i * t1, __m128i * t3)
  * @param expandedKey An output buffer to hold the generated key schedule
  */
 
-STATIC INLINE void
-aes_expand_key(const uint8_t * key, uint8_t * expandedKey)
+STATIC INLINE void aes_expand_key(const uint8_t * key,
+                                  uint8_t * expandedKey)
 {
     __m128i *ek = R128(expandedKey);
 
@@ -479,9 +479,9 @@ aes_expand_key(const uint8_t * key, uint8_t * expandedKey)
  * @param nblocks the number of 128 blocks of data to be encrypted
  */
 
-STATIC INLINE void
-aes_pseudo_round(const uint8_t * in, uint8_t * out,
-                 const uint8_t * expandedKey, int nblocks)
+STATIC INLINE void aes_pseudo_round(const uint8_t * in, uint8_t * out,
+                                    const uint8_t * expandedKey,
+                                    int nblocks)
 {
     __m128i *k = R128(expandedKey);
 
@@ -520,10 +520,9 @@ aes_pseudo_round(const uint8_t * in, uint8_t * out,
  * @param nblocks the number of 128 blocks of data to be encrypted
  */
 
-STATIC INLINE void
-aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
-                     const uint8_t * expandedKey, const uint8_t * xor,
-                     int nblocks)
+STATIC INLINE void aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
+                                        const uint8_t * expandedKey,
+                                        const uint8_t * xor, int nblocks)
 {
     __m128i *k = R128(expandedKey);
 
@@ -681,10 +680,9 @@ void slow_hash_free_state(uint32_t page_size)
  * @param length the length in bytes of the data
  * @param hash a pointer to a buffer in which the final 256 bit hash will be stored
  */
-void
-cn_slow_hash(const void *data, size_t length, char *hash, int light,
-             int variant, int prehashed, uint32_t page_size,
-             uint32_t scratchpad, uint32_t iterations)
+void cn_slow_hash(const void *data, size_t length, char *hash, int light,
+                  int variant, int prehashed, uint32_t page_size,
+                  uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t TOTALBLOCKS = (page_size / AES_BLOCK_SIZE);
 
@@ -948,9 +946,9 @@ static void aes_expand_key(const uint8_t * key, uint8_t * expandedKey)
  * feeding in a vector of zeros for our first step. Also we have to do our own Xor explicitly
  * at the last step, to provide the AddRoundKey that the ARM instructions omit.
  */
-STATIC INLINE void
-aes_pseudo_round(const uint8_t * in, uint8_t * out,
-                 const uint8_t * expandedKey, int nblocks)
+STATIC INLINE void aes_pseudo_round(const uint8_t * in, uint8_t * out,
+                                    const uint8_t * expandedKey,
+                                    int nblocks)
 {
     const uint8x16_t *k = (const uint8x16_t *) expandedKey, zero =
     {
@@ -988,10 +986,9 @@ aes_pseudo_round(const uint8_t * in, uint8_t * out,
     }
 }
 
-STATIC INLINE void
-aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
-                     const uint8_t * expandedKey, const uint8_t * xor,
-                     int nblocks)
+STATIC INLINE void aes_pseudo_round_xor(const uint8_t * in, uint8_t * out,
+                                        const uint8_t * expandedKey,
+                                        const uint8_t * xor, int nblocks)
 {
     const uint8x16_t *k = (const uint8x16_t *) expandedKey;
 
@@ -1054,10 +1051,9 @@ STATIC INLINE void aligned_free(void *ptr)
 }
 #endif                          /* FORCE_USE_HEAP */
 
-void
-cn_slow_hash(const void *data, size_t length, char *hash, int light,
-             int variant, int prehashed, uint32_t page_size,
-             uint32_t scratchpad, uint32_t iterations)
+void cn_slow_hash(const void *data, size_t length, char *hash, int light,
+                  int variant, int prehashed, uint32_t page_size,
+                  uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t TOTALBLOCKS = (page_size / AES_BLOCK_SIZE);
 
@@ -1235,8 +1231,8 @@ STATIC void cn_mul128(const uint64_t * a, const uint64_t * b, uint64_t * r)
 }
 #else                           /* ARM32 */
 #define mul(a, b, c)	cn_mul128((const uint32_t *)a, (const uint32_t *)b, (uint32_t *)c)
-STATIC void
-cn_mul128(const uint32_t * aa, const uint32_t * bb, uint32_t * r)
+STATIC void cn_mul128(const uint32_t * aa, const uint32_t * bb,
+                      uint32_t * r)
 {
     uint32_t t0, t1, t2 = 0, t3 = 0;
 
@@ -1298,10 +1294,9 @@ STATIC INLINE void xor_blocks(uint8_t * a, const uint8_t * b)
     U64(a)[1] ^= U64(b)[1];
 }
 
-void
-cn_slow_hash(const void *data, size_t length, char *hash, int light,
-             int variant, int prehashed, uint32_t page_size,
-             uint32_t scratchpad, uint32_t iterations)
+void cn_slow_hash(const void *data, size_t length, char *hash, int light,
+                  int variant, int prehashed, uint32_t page_size,
+                  uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t init_rounds = (scratchpad / INIT_SIZE_BYTE);
 
@@ -1545,10 +1540,9 @@ union cn_slow_hash_state {
 
 #pragma pack(pop)
 
-void
-cn_slow_hash(const void *data, size_t length, char *hash, int light,
-             int variant, int prehashed, uint32_t page_size,
-             uint32_t scratchpad, uint32_t iterations)
+void cn_slow_hash(const void *data, size_t length, char *hash, int light,
+                  int variant, int prehashed, uint32_t page_size,
+                  uint32_t scratchpad, uint32_t iterations)
 {
     uint32_t init_rounds = (scratchpad / INIT_SIZE_BYTE);
 

@@ -7,7 +7,8 @@
       ],
       "include_dirs": [
         "include",
-        "<!(node -e \"require('nan')\")"
+        "<!(node -e \"require('nan')\")",
+        "argon2/include"
       ],
       "sources": [
         "src/aesb.c",
@@ -30,7 +31,13 @@
         "src/slow-hash.c",
         "src/StringTools.cpp",
         "src/tree-hash.c",
-        "src/turtlecoin-crypto.cpp"
+        "src/turtlecoin-crypto.cpp",
+        "argon2/src/argon2.c",
+        "argon2/src/core.c",
+        "argon2/src/encoding.c",
+        "argon2/src/ref.c",
+        "argon2/src/thread.c",
+        "argon2/src/blake2/blake2b.c"
       ],
       "cflags!": [
         "-std=c11",

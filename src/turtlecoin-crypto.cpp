@@ -377,6 +377,43 @@ void generateKeyImage(const Nan::FunctionCallbackInfo < v8::Value > &info)
     info.GetReturnValue().Set(Nan::Undefined());
 }
 
+void chukwa(const Nan::FunctionCallbackInfo < v8::Value > &info)
+{
+    std::string hash = std::string();
+    std::string data = std::string();
+
+    if (info.Length() == 1)
+    {
+        if (info[0]->IsString())
+        {
+            data = std::string(*Nan::Utf8String(info[0]->ToString()));
+        }
+
+        if (!data.empty())
+        {
+            const BinaryArray & rawData = Common::fromHex(data);
+
+            Crypto::Hash c_hash = Crypto::Hash();
+            try
+            {
+                Crypto::chukwa_slow_hash(rawData.data(), rawData.size(),
+                                         c_hash);
+            } catch(const std::exception & e) {
+                return Nan::ThrowError(e.what());
+            }
+
+            hash = Common::podToHex(c_hash);
+            v8::Local < v8::String > returnValue =
+                Nan::New(hash).ToLocalChecked();
+
+            info.GetReturnValue().Set(returnValue);
+            return;
+        }
+    }
+
+    info.GetReturnValue().Set(Nan::Undefined());
+}
+
 void cn_fast_hash(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     std::string hash = std::string();
@@ -826,6 +863,10 @@ void InitModule(v8::Local < v8::Object > exports)
     exports->Set(Nan::New("generateRingSignatures").ToLocalChecked(),
                  Nan::New < v8::FunctionTemplate >
                  (generateRingSignatures)->GetFunction());
+
+    exports->Set(Nan::New("chukwa").ToLocalChecked(),
+                 Nan::New < v8::FunctionTemplate >
+                 (chukwa)->GetFunction());
 
     exports->Set(Nan::New("cnFastHash").ToLocalChecked(),
                  Nan::New < v8::FunctionTemplate >

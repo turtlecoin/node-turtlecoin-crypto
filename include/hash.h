@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "argon2.h"
+
 #include <stddef.h>
 
 #include "CryptoTypes.h"
@@ -43,6 +45,13 @@
 #if (((CN_SOFT_SHELL_WINDOW * CN_SOFT_SHELL_PAD_MULTIPLIER) + CN_SOFT_SHELL_MEMORY) > CN_PAGE_SIZE)
 #error The CryptoNight Soft Shell Parameters you supplied will exceed normal paging operations.
 #endif
+
+// Chukwa Definitions
+#define CHUKWA_HASHLEN 32       // The length of the resulting hash in bytes
+#define CHUKWA_SALTLEN 16       // The length of our salt in bytes
+#define CHUKWA_THREADS 1        // How many threads to use at once
+#define CHUKWA_ITERS   3        // How many iterations we perform as part of our slow-hash
+#define CHUKWA_MEMORY  512      // This value is in KiB (0.5MB)
 
 namespace Crypto {
 
@@ -265,6 +274,17 @@ namespace Crypto {
 
         cn_slow_hash(data, length, reinterpret_cast < char *>(&hash), 1, 2,
                      0, pagesize, scratchpad, iterations);
+    }
+
+    inline void chukwa_slow_hash(const void *data, size_t length,
+                                 Hash & hash) {
+        uint8_t salt[CHUKWA_SALTLEN];
+
+        memcpy(salt, data, sizeof(salt));
+
+        argon2id_hash_raw(CHUKWA_ITERS, CHUKWA_MEMORY, CHUKWA_THREADS,
+                          data, length, salt, CHUKWA_SALTLEN, hash.data,
+                          CHUKWA_HASHLEN);
     }
 
     inline void tree_hash(const Hash * hashes, size_t count,

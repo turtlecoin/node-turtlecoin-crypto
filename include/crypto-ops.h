@@ -61,7 +61,9 @@ void ge_double_scalarmult_base_vartime(ge_p2 *, const unsigned char *,
                                        const ge_p3 *,
                                        const unsigned char *);
 
-void ge_double_scalarmult_base_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *);
+void ge_double_scalarmult_base_vartime_p3(ge_p3 *, const unsigned char *,
+                                          const ge_p3 *,
+                                          const unsigned char *);
 
 /* From ge_frombytes.c, modified */
 
@@ -121,13 +123,27 @@ void ge_scalarmult(ge_p2 *, const unsigned char *, const ge_p3 *);
 
 void ge_scalarmult_p3(ge_p3 *, const unsigned char *, const ge_p3 *);
 
-void ge_double_scalarmult_precomp_vartime(ge_p2 *, const unsigned char *, const ge_p3 *, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime(ge_p2 *, const unsigned char *,
+                                          const ge_p3 *,
+                                          const unsigned char *,
+                                          const ge_dsmp);
 
-void ge_double_scalarmult_precomp_vartime_p3(ge_p3 *, const unsigned char *, const ge_p3 *, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime_p3(ge_p3 *,
+                                             const unsigned char *,
+                                             const ge_p3 *,
+                                             const unsigned char *,
+                                             const ge_dsmp);
 
-void ge_double_scalarmult_precomp_vartime2(ge_p2 *, const unsigned char *, const ge_dsmp, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime2(ge_p2 *, const unsigned char *,
+                                           const ge_dsmp,
+                                           const unsigned char *,
+                                           const ge_dsmp);
 
-void ge_double_scalarmult_precomp_vartime2_p3(ge_p3 *, const unsigned char *, const ge_dsmp, const unsigned char *, const ge_dsmp);
+void ge_double_scalarmult_precomp_vartime2_p3(ge_p3 *,
+                                              const unsigned char *,
+                                              const ge_dsmp,
+                                              const unsigned char *,
+                                              const ge_dsmp);
 
 int ge_check_subgroup_precomp_vartime(const ge_dsmp);
 
@@ -165,12 +181,13 @@ void sc_add(unsigned char *, const unsigned char *, const unsigned char *);
 
 void sc_sub(unsigned char *, const unsigned char *, const unsigned char *);
 
-void sc_mulsub(unsigned char *, const unsigned char *, const unsigned char *,
-               const unsigned char *);
+void sc_mulsub(unsigned char *, const unsigned char *,
+               const unsigned char *, const unsigned char *);
 
 void sc_mul(unsigned char *, const unsigned char *, const unsigned char *);
 
-void sc_muladd(unsigned char *, const unsigned char *, const unsigned char *, const unsigned char *);
+void sc_muladd(unsigned char *, const unsigned char *,
+               const unsigned char *, const unsigned char *);
 
 void sc_invert(unsigned char *, const unsigned char *);
 
