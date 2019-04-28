@@ -17,7 +17,7 @@ This project is designed to expose the necessary C++ cryptographic methods from 
 
 ## Dependencies
 
-* [Node.js](https://nodejs.org) >= +6.x
+* [Node.js](https://nodejs.org) >= +6.x LTS (or Node v11)
 
 ### Windows
 
