@@ -63,7 +63,11 @@
         "-Waggregate-return",
         "-Wnested-externs",
         "-Wold-style-definition",
-        "-Wstrict-prototypes"
+        "-Wstrict-prototypes",
+        "-fno-exceptions"
+      ],
+      "cflags_cc!": [
+        "-fno-exceptions"
       ],
       "cflags_cc": [
         "-std=c++11",
@@ -91,6 +95,21 @@
         "-fexceptions"
       ],
       "conditions": [
+        [
+          'OS=="mac"', 
+          {
+            'xcode_settings': {
+              'OTHER_CPLUSPLUSFLAGS': [
+                '-std=c++11',
+                '-stdlib=libc++',
+                '-fexceptions',
+              ],
+              'CLANG_CXX_LIBRARY': 'libc++',
+              'CLANG_CXX_LANGUAGE_STANDARD':'c++11',
+              'MACOSX_DEPLOYMENT_TARGET': '10.7'
+            }
+          }
+        ],
         [
           "OS=='win'",
           {

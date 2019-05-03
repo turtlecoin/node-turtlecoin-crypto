@@ -8,7 +8,7 @@
 #include <alloca.h>
 #include <cassert>
 #include <cstddef>
-#include <cstdint>
+#include <stdint.h>
 #include <cstdlib>
 #include <cstring>
 #include <memory>
