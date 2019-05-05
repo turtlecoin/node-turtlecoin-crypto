@@ -1,6 +1,6 @@
 {
   "name": "turtlecoin-crypto",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "Node C++ Addon for TurtleCoin Cryptographic Functions",
   "main": "index.js",
   "scripts": {
