@@ -10,7 +10,18 @@
 #include "hash.h"
 #include "StringTools.h"
 
-using BinaryArray = std::vector < uint8_t >;
+using BinaryArray = std::vector<uint8_t>;
+
+inline v8::Local<v8::Array> prepareResult(const bool success, const v8::Local<v8::Value> val)
+{
+  v8::Local<v8::Array> result = Nan::New<v8::Array>(2);
+
+  /* We do the inverse of success because we want the results in [err, value] format */
+  Nan::Set(result, 0, Nan::New(!success));
+  Nan::Set(result, 1, val);
+
+  return result;
+}
 
 void generate_keys(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
@@ -37,12 +48,16 @@ void generate_keys(const Nan::FunctionCallbackInfo < v8::Value > &info)
     Nan::Set(jsonObject, publicKeyProp, publicKeyValue);
     Nan::Set(jsonObject, secretKeyProp, secretKeyValue);
 
-    info.GetReturnValue().Set(jsonObject);
+    info.GetReturnValue().Set(prepareResult(true, jsonObject));
 }
 
 void secretKeyToPublicKey(const Nan::FunctionCallbackInfo < v8::Value >
                           &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string secretKey = std::string();
 
     if (info.Length() == 1)
@@ -59,26 +74,28 @@ void secretKeyToPublicKey(const Nan::FunctionCallbackInfo < v8::Value >
 
             Crypto::PublicKey c_public_key;
 
-            bool success = Crypto::secret_key_to_public_key(c_secret_key,
-                                                            c_public_key);
+            bool success = Crypto::secret_key_to_public_key(c_secret_key, c_public_key);
 
             if (success)
             {
                 std::string c_result = Common::podToHex(c_public_key);
-                v8::Local < v8::String > returnValue =
-                    Nan::New(c_result).ToLocalChecked();
 
-                info.GetReturnValue().Set(returnValue);
-                return;
+                functionReturnValue = Nan::New(c_result).ToLocalChecked();
+
+                functionSuccess = true;
             }
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void checkSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string prefixHash = std::string();
     std::string publicKey = std::string();
     std::string signature = std::string();
@@ -113,22 +130,23 @@ void checkSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
             Crypto::Signature c_signature;
             Common::podFromHex(signature, c_signature);
 
-            bool success =
-                Crypto::check_signature(c_prefixHash, c_public_key,
-                                        c_signature);
+            bool success = Crypto::check_signature(c_prefixHash, c_public_key, c_signature);
 
-            v8::Local < v8::Boolean > returnValue = Nan::New(success);
+            functionReturnValue = Nan::New(success);
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void generateSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string prefixHash = std::string();
     std::string publicKey = std::string();
     std::string secretKey = std::string();
@@ -174,20 +192,22 @@ void generateSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
             }
 
             std::string c_result = Common::podToHex(c_sig);
-            v8::Local < v8::String > returnValue =
-                Nan::New(c_result).ToLocalChecked();
+            functionReturnValue = Nan::New(c_result).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void generateRingSignatures(const Nan::FunctionCallbackInfo <
                             v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string prefixHash = std::string();
     std::string keyImage = std::string();
     std::string transactionSecretKey = std::string();
@@ -272,13 +292,14 @@ void generateRingSignatures(const Nan::FunctionCallbackInfo <
                     Nan::Set(sigs, i, result);
                 }
 
-                info.GetReturnValue().Set(sigs);
-                return;
+                functionReturnValue = sigs;
+
+                functionSuccess = true;
             }
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 /* bool: checkRingSignature*/
@@ -286,6 +307,10 @@ void generateRingSignatures(const Nan::FunctionCallbackInfo <
 void generateKeyDerivation(const Nan::FunctionCallbackInfo <
                            v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string secretKey = std::string();
     std::string publicKey = std::string();
 
@@ -317,20 +342,22 @@ void generateKeyDerivation(const Nan::FunctionCallbackInfo <
             if (success)
             {
                 std::string c_result = Common::podToHex(derivation);
-                v8::Local < v8::String > returnValue =
-                    Nan::New(c_result).ToLocalChecked();
+                functionReturnValue = Nan::New(c_result).ToLocalChecked();
 
-                info.GetReturnValue().Set(returnValue);
-                return;
+                functionSuccess = true;
             }
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void generateKeyImage(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string publicKey = std::string();
     std::string secretKey = std::string();
 
@@ -366,19 +393,21 @@ void generateKeyImage(const Nan::FunctionCallbackInfo < v8::Value > &info)
 
             std::string result = Common::podToHex(c_key_image);
 
-            v8::Local < v8::String > returnValue =
-                Nan::New(result).ToLocalChecked();
+            functionReturnValue = Nan::New(result).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void chukwa(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string hash = std::string();
     std::string data = std::string();
 
@@ -403,19 +432,22 @@ void chukwa(const Nan::FunctionCallbackInfo < v8::Value > &info)
             }
 
             hash = Common::podToHex(c_hash);
-            v8::Local < v8::String > returnValue =
-                Nan::New(hash).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionReturnValue = Nan::New(hash).ToLocalChecked();
+
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void cn_fast_hash(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string hash = std::string();
     std::string data = std::string();
 
@@ -440,19 +472,22 @@ void cn_fast_hash(const Nan::FunctionCallbackInfo < v8::Value > &info)
             }
 
             hash = Common::podToHex(c_hash);
-            v8::Local < v8::String > returnValue =
-                Nan::New(hash).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionReturnValue = Nan::New(hash).ToLocalChecked();
+
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void checkKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string publicKey = std::string();
 
     if (info.Length() == 1)
@@ -469,18 +504,21 @@ void checkKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 
             bool success = Crypto::check_key(c_public_key);
 
-            v8::Local < v8::Boolean > returnValue = Nan::New(success);
+            functionReturnValue = Nan::New(success);
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void derivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     size_t outputIndex = 0;
 
     std::string derivation = std::string();
@@ -520,20 +558,23 @@ void derivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
             if (success)
             {
                 std::string result = Common::podToHex(c_result);
-                v8::Local < v8::String > returnValue =
-                    Nan::New(result).ToLocalChecked();
 
-                info.GetReturnValue().Set(returnValue);
-                return;
+                functionReturnValue = Nan::New(result).ToLocalChecked();
+
+                functionSuccess = true;
             }
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void deriveSecretKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     size_t outputIndex = 0;
 
     std::string derivation = std::string();
@@ -576,19 +617,22 @@ void deriveSecretKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
             }
 
             std::string result = Common::podToHex(c_result);
-            v8::Local < v8::String > returnValue =
-                Nan::New(result).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionReturnValue = Nan::New(result).ToLocalChecked();
+
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void underivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     size_t outputIndex = 0;
 
     std::string derivation = std::string();
@@ -630,21 +674,23 @@ void underivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
             if (success)
             {
                 std::string result = Common::podToHex(c_result);
-                v8::Local < v8::String > returnValue =
-                    Nan::New(result).ToLocalChecked();
+                functionReturnValue = Nan::New(result).ToLocalChecked();
 
-                info.GetReturnValue().Set(returnValue);
-                return;
+                functionSuccess = true;
             }
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void cn_turtle_lite_slow_hash_v0(const Nan::FunctionCallbackInfo <
                                  v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string hash = std::string();
     std::string data = std::string();
 
@@ -670,20 +716,23 @@ void cn_turtle_lite_slow_hash_v0(const Nan::FunctionCallbackInfo <
             }
 
             hash = Common::podToHex(c_hash);
-            v8::Local < v8::String > returnValue =
-                Nan::New(hash).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionReturnValue = Nan::New(hash).ToLocalChecked();
+
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void cn_turtle_lite_slow_hash_v1(const Nan::FunctionCallbackInfo <
                                  v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string hash = std::string();
     std::string data = std::string();
 
@@ -709,22 +758,26 @@ void cn_turtle_lite_slow_hash_v1(const Nan::FunctionCallbackInfo <
             }
 
             hash = Common::podToHex(c_hash);
-            v8::Local < v8::String > returnValue =
-                Nan::New(hash).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionReturnValue = Nan::New(hash).ToLocalChecked();
+
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void cn_turtle_lite_slow_hash_v2(const Nan::FunctionCallbackInfo <
                                  v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string hash = std::string();
     std::string data = std::string();
+
     if (info.Length() == 1)
     {
         if (info[0]->IsString())
@@ -747,19 +800,22 @@ void cn_turtle_lite_slow_hash_v2(const Nan::FunctionCallbackInfo <
             }
 
             hash = Common::podToHex(c_hash);
-            v8::Local < v8::String > returnValue =
-                Nan::New(hash).ToLocalChecked();
 
-            info.GetReturnValue().Set(returnValue);
-            return;
+            functionReturnValue = Nan::New(hash).ToLocalChecked();
+
+            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void scReduce32(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string data = std::string();
     std::string scalar = std::string();
 
@@ -782,18 +838,21 @@ void scReduce32(const Nan::FunctionCallbackInfo < v8::Value > &info)
         }
 
         scalar = Common::podToHex(l_scalar);
-        v8::Local < v8::String > returnValue =
-            Nan::New(scalar).ToLocalChecked();
 
-        info.GetReturnValue().Set(returnValue);
-        return;
+        functionReturnValue = Nan::New(scalar).ToLocalChecked();
+
+        functionSuccess = true;
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void hashToScalar(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
+    /* Setup our return object */
+    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
+    bool functionSuccess = false;
+
     std::string data = std::string();
     std::string scalar = std::string();
 
@@ -816,14 +875,13 @@ void hashToScalar(const Nan::FunctionCallbackInfo < v8::Value > &info)
         }
 
         scalar = Common::podToHex(l_scalar);
-        v8::Local < v8::String > returnValue =
-            Nan::New(scalar).ToLocalChecked();
 
-        info.GetReturnValue().Set(returnValue);
-        return;
+        functionReturnValue = Nan::New(scalar).ToLocalChecked();
+
+        functionSuccess = true;
     }
 
-    info.GetReturnValue().Set(Nan::Undefined());
+    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
 }
 
 void InitModule(v8::Local < v8::Object > exports)

@@ -18,8 +18,8 @@ const cnfasthashdata = crypto.cnFastHash(xmrigdata)
 // const xmrigcnturtlelitevariant2data = crypto.cn_turtle_lite_slow_hash_v2(xmrigdata)
 
 console.log('')
-console.log('[#1] Cryptonight Fast Hash: ', cnfasthashdata)
-assert.deepStrictEqual(cnfasthashdata, cnfasthash)
+console.log('[#1] Cryptonight Fast Hash: ', cnfasthashdata[1])
+assert.deepStrictEqual(cnfasthashdata[1], cnfasthash)
 /*
 console.log('[#2] Cryptonight Turtle Lite v0: ', xmrigcnturtlelitevariant0data)
 assert.deepStrictEqual(xmrigcnturtlelitevariant0data, xmrigcnturtlelitevariant0hash)
