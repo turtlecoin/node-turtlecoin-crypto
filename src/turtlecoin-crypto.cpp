@@ -38,8 +38,7 @@ inline v8::Local<v8::Array> prepareResult(const bool success, const v8::Local<v8
 void checkKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     /* Setup our return object */
-    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
-    bool functionSuccess = false;
+    v8::Local<v8::Value> functionReturnValue = Nan::New(false);
 
     std::string publicKey = std::string();
 
@@ -58,12 +57,10 @@ void checkKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
             bool success = Crypto::check_key(c_public_key);
 
             functionReturnValue = Nan::New(success);
-
-            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
+    info.GetReturnValue().Set(functionReturnValue);
 }
 
 /* bool: checkRingSignature*/
@@ -71,8 +68,7 @@ void checkKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 void checkSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     /* Setup our return object */
-    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
-    bool functionSuccess = false;
+    v8::Local<v8::Value> functionReturnValue = Nan::New(false);
 
     std::string prefixHash = std::string();
     std::string publicKey = std::string();
@@ -111,12 +107,10 @@ void checkSignature(const Nan::FunctionCallbackInfo < v8::Value > &info)
             bool success = Crypto::check_signature(c_prefixHash, c_public_key, c_signature);
 
             functionReturnValue = Nan::New(success);
-
-            functionSuccess = true;
         }
     }
 
-    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
+    info.GetReturnValue().Set(functionReturnValue);
 }
 
 void derivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
@@ -696,46 +690,6 @@ void underivePublicKey(const Nan::FunctionCallbackInfo < v8::Value > &info)
 *
 */
 
-void chukwa(const Nan::FunctionCallbackInfo < v8::Value > &info)
-{
-    /* Setup our return object */
-    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
-    bool functionSuccess = false;
-
-    std::string hash = std::string();
-    std::string data = std::string();
-
-    if (info.Length() == 1)
-    {
-        if (info[0]->IsString())
-        {
-            data = std::string(*Nan::Utf8String(info[0]->ToString()));
-        }
-
-        if (!data.empty())
-        {
-            const BinaryArray & rawData = Common::fromHex(data);
-
-            Crypto::Hash c_hash = Crypto::Hash();
-            try
-            {
-                Crypto::chukwa_slow_hash(rawData.data(), rawData.size(),
-                                         c_hash);
-            } catch(const std::exception & e) {
-                return Nan::ThrowError(e.what());
-            }
-
-            hash = Common::podToHex(c_hash);
-
-            functionReturnValue = Nan::New(hash).ToLocalChecked();
-
-            functionSuccess = true;
-        }
-    }
-
-    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
-}
-
 void cn_fast_hash(const Nan::FunctionCallbackInfo < v8::Value > &info)
 {
     /* Setup our return object */
@@ -761,132 +715,6 @@ void cn_fast_hash(const Nan::FunctionCallbackInfo < v8::Value > &info)
             {
                 Crypto::cn_fast_hash(rawData.data(), rawData.size(),
                                      c_hash);
-            } catch(const std::exception & e) {
-                return Nan::ThrowError(e.what());
-            }
-
-            hash = Common::podToHex(c_hash);
-
-            functionReturnValue = Nan::New(hash).ToLocalChecked();
-
-            functionSuccess = true;
-        }
-    }
-
-    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
-}
-
-void cn_turtle_lite_slow_hash_v0(const Nan::FunctionCallbackInfo <
-                                 v8::Value > &info)
-{
-    /* Setup our return object */
-    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
-    bool functionSuccess = false;
-
-    std::string hash = std::string();
-    std::string data = std::string();
-
-    if (info.Length() == 1)
-    {
-        if (info[0]->IsString())
-        {
-            data = std::string(*Nan::Utf8String(info[0]->ToString()));
-        }
-
-        if (!data.empty())
-        {
-            const BinaryArray & rawData = Common::fromHex(data);
-
-            Crypto::Hash c_hash = Crypto::Hash();
-            try
-            {
-                Crypto::cn_turtle_lite_slow_hash_v0(rawData.data(),
-                                                    rawData.size(),
-                                                    c_hash);
-            } catch(const std::exception & e) {
-                return Nan::ThrowError(e.what());
-            }
-
-            hash = Common::podToHex(c_hash);
-
-            functionReturnValue = Nan::New(hash).ToLocalChecked();
-
-            functionSuccess = true;
-        }
-    }
-
-    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
-}
-
-void cn_turtle_lite_slow_hash_v1(const Nan::FunctionCallbackInfo <
-                                 v8::Value > &info)
-{
-    /* Setup our return object */
-    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
-    bool functionSuccess = false;
-
-    std::string hash = std::string();
-    std::string data = std::string();
-
-    if (info.Length() == 1)
-    {
-        if (info[0]->IsString())
-        {
-            data = std::string(*Nan::Utf8String(info[0]->ToString()));
-        }
-
-        if (!data.empty())
-        {
-            const BinaryArray & rawData = Common::fromHex(data);
-
-            Crypto::Hash c_hash = Crypto::Hash();
-            try
-            {
-                Crypto::cn_turtle_lite_slow_hash_v1(rawData.data(),
-                                                    rawData.size(),
-                                                    c_hash);
-            } catch(const std::exception & e) {
-                return Nan::ThrowError(e.what());
-            }
-
-            hash = Common::podToHex(c_hash);
-
-            functionReturnValue = Nan::New(hash).ToLocalChecked();
-
-            functionSuccess = true;
-        }
-    }
-
-    info.GetReturnValue().Set(prepareResult(functionSuccess, functionReturnValue));
-}
-
-void cn_turtle_lite_slow_hash_v2(const Nan::FunctionCallbackInfo <
-                                 v8::Value > &info)
-{
-    /* Setup our return object */
-    v8::Local<v8::Value> functionReturnValue = Nan::New("").ToLocalChecked();
-    bool functionSuccess = false;
-
-    std::string hash = std::string();
-    std::string data = std::string();
-
-    if (info.Length() == 1)
-    {
-        if (info[0]->IsString())
-        {
-            data = std::string(*Nan::Utf8String(info[0]->ToString()));
-        }
-
-        if (!data.empty())
-        {
-            const BinaryArray & rawData = Common::fromHex(data);
-
-            Crypto::Hash c_hash = Crypto::Hash();
-            try
-            {
-                Crypto::cn_turtle_lite_slow_hash_v2(rawData.data(),
-                                                    rawData.size(),
-                                                    c_hash);
             } catch(const std::exception & e) {
                 return Nan::ThrowError(e.what());
             }
@@ -958,25 +786,9 @@ void InitModule(v8::Local < v8::Object > exports)
                  (underivePublicKey)->GetFunction());
 
     /* Hashing Operations */
-    exports->Set(Nan::New("chukwa").ToLocalChecked(),
-                 Nan::New < v8::FunctionTemplate >
-                 (chukwa)->GetFunction());
-
     exports->Set(Nan::New("cnFastHash").ToLocalChecked(),
                  Nan::New < v8::FunctionTemplate >
                  (cn_fast_hash)->GetFunction());
-
-    exports->Set(Nan::New("cn_turtle_lite_slow_hash_v0").ToLocalChecked(),
-                 Nan::New < v8::FunctionTemplate >
-                 (cn_turtle_lite_slow_hash_v0)->GetFunction());
-
-    exports->Set(Nan::New("cn_turtle_lite_slow_hash_v1").ToLocalChecked(),
-                 Nan::New < v8::FunctionTemplate >
-                 (cn_turtle_lite_slow_hash_v1)->GetFunction());
-
-    exports->Set(Nan::New("cn_turtle_lite_slow_hash_v2").ToLocalChecked(),
-                 Nan::New < v8::FunctionTemplate >
-                 (cn_turtle_lite_slow_hash_v2)->GetFunction());
 }
 
 NODE_MODULE(turtlecoincrypto, InitModule);
