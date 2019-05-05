@@ -50,7 +50,7 @@ var publicSpendKey1
 [err, publicSpendKey1] = crypto.underivePublicKey(derivation, 0, 'aae1b90b4d0a7debb417d91b7f7aa8fdfd80c42ebc6757e1449fd1618a5a3ff1')
 
 console.log('')
-console.log('[#3] Underive Public Key')
+console.log('[#3] Underive Public Key: False Test')
 console.log('     Derived public spend key: ', publicSpendKey1)
 console.log('     Our public spend key: ', walletPublicSpendKey)
 
@@ -60,7 +60,7 @@ var publicSpendKey2
 [err, publicSpendKey2] = crypto.underivePublicKey(derivation, ourOutputIndex, 'bb55bef919d1c9f74b5b52a8a6995a1dc4af4c0bb8824f5dc889012bc748173d')
 
 console.log('')
-console.log('[#4] Underive Public Key')
+console.log('[#4] Underive Public Key: True Test')
 console.log('     Derived public spend key: ', publicSpendKey2)
 console.log('     Our public spend key: ', walletPublicSpendKey)
 
