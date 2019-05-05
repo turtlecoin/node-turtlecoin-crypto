@@ -99,7 +99,7 @@ Returns an array of [err, key]; ex.
 ]
 ```
 
-## deriveSecretKey()
+## deriveSecretKey(derivation, outputIndex, transactionSecretKey)
 
 Derives the secret key from the supplied values:
 
