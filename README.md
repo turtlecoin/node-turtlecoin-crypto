@@ -90,9 +90,14 @@ const publicKey = TurtleCoinCrypto.derivePublicKey(
 )
 ```
 
-Returns the derived public key of the supplied values. Ex:
+Returns an array of [err, key]; ex.
 
-`bb55bef919d1c9f74b5b52a8a6995a1dc4af4c0bb8824f5dc889012bc748173d`
+```javascript
+[
+  false,
+  "bb55bef919d1c9f74b5b52a8a6995a1dc4af4c0bb8824f5dc889012bc748173d"
+]
+```
 
 ## deriveSecretKey()
 
@@ -109,9 +114,14 @@ const secretKey = TurtleCoinCrypto.deriveSecretKey(
 )
 ```
 
-Returns the secret key of the supplied values. Ex:
+Returns an array of [err, key]; ex.
 
-`82dd5463fd25de745a78efde53eff28f333fbbfdde5be502bfbcb77e54dfb10d`
+```javascript
+[
+  false,
+  "82dd5463fd25de745a78efde53eff28f333fbbfdde5be502bfbcb77e54dfb10d"
+]
+```
 
 ## generateKeyDerivation(secretKey, publicKey)
 
@@ -125,9 +135,14 @@ const publicKey =
 const derivation = TurtleCoinCrypto.generateKeyDerivation(secretKey, publicKey)
 ```
 
-Returns the key derivation. Ex:
+Returns an array of [err, keyDerivation]; ex.
 
-`a45bdbc86565a8917e31d4c2ac9cd32bf5f6702660505101528373392a373a4d`
+```javascript
+[
+  false,
+  "a45bdbc86565a8917e31d4c2ac9cd32bf5f6702660505101528373392a373a4d"
+]
+```
 
 ## generateKeyImage(publicKey, secretKey)
 
@@ -141,9 +156,14 @@ const secretKey =
 const keyImage = TurtleCoinCrypto.generateKeyImage(publicKey, secretKey)
 ```
 
-Returns the key image. Ex:
+Returns an array of [err, keyImage]; ex.
 
-`157d58afd4cbe4a78a1d3843fb684b34e61c2707f9c350715b649637e2c38416`
+```javascript
+[
+  false,
+  "157d58afd4cbe4a78a1d3843fb684b34e61c2707f9c350715b649637e2c38416"
+]
+```
 
 ## generateKeys()
 
@@ -153,13 +173,16 @@ Generates a random public and secret key pair
 const keys = TurtleCoinCrypo.generateKeys()
 ```
 
-Example result below:
+Returns an array of [err, keys]; ex.
 
 ```javascript
-{
-  "publicKey": "0e5dc2885517e4aff187804e7eac350120a920108388c9740361ab96193b1773",
-  "secretKey": "7684dcb378de24960838d1ab7328f01d4506ae2643d166710ff056304dca880a"
-}
+[
+  false,
+  {
+    "publicKey": "0e5dc2885517e4aff187804e7eac350120a920108388c9740361ab96193b1773",
+    "secretKey": "7684dcb378de24960838d1ab7328f01d4506ae2643d166710ff056304dca880a"
+  }
+]
 ```
 
 ## secretKeyToPublicKey(secretKey)
@@ -171,9 +194,14 @@ const secretKey = '7684dcb378de24960838d1ab7328f01d4506ae2643d166710ff056304dca8
 const publicKey = TurtleCoinCrypto.secretKeyToPublicKey(secretKey)
 ```
 
-Returns the publicKey for the supplied secretKey. Ex:
+Returns an array of [err, key]; ex.
 
-`0e5dc2885517e4aff187804e7eac350120a920108388c9740361ab96193b1773`
+```javascript
+[
+  false,
+  "0e5dc2885517e4aff187804e7eac350120a920108388c9740361ab96193b1773"
+]
+```
 
 ## generateRingSignatures(prefixHash, keyImage, [inputKeys], transactionSecretKey, realInputIndex)
 
@@ -200,14 +228,17 @@ const signatures = TurtleCoinCrypto.generateRingSignatures(
 
 *Example code will not generate a valid set of signatures.*
 
-Returns an array of signatures. Ex:
+Returns an array of [err, signatures]; ex.
 
 ```javascript
 [
-  'bc86077e451cedeb5320d93a7783e1e693d058dcc174c14d1b55877c8222e40619924f2d4331e929701900fd4a2ad47b1838e5ed43a2cc319feae15da320540b',
-  '4bf4ed9acb70ca43ffd2b8c3fb58eecb3a7d3230aaa19397f7a083c037e08c05f14b58258a3a3cbb880808eb33a72e934ffba22ecece2c16f2e64b1d000a9e03',
-  '05d320145d1930d84e4785f410eba02a52144aecca335b9b733f63b257c5af0431ddbabe8c3460b1852f3fe7916e63ef2dd2e76c3a199fb84de0b4608ace4e0b',
-  '03967e84fd936a3604360df7c39d0c94bcd9a72f327f0019dca34e196931c50be2ff10b93d1304866f400961c2bd921a02ad16e1f6c2f0966e5640a1651ad70f'
+  false,
+  [
+    "bc86077e451cedeb5320d93a7783e1e693d058dcc174c14d1b55877c8222e40619924f2d4331e929701900fd4a2ad47b1838e5ed43a2cc319feae15da320540b",
+    "4bf4ed9acb70ca43ffd2b8c3fb58eecb3a7d3230aaa19397f7a083c037e08c05f14b58258a3a3cbb880808eb33a72e934ffba22ecece2c16f2e64b1d000a9e03",
+    "05d320145d1930d84e4785f410eba02a52144aecca335b9b733f63b257c5af0431ddbabe8c3460b1852f3fe7916e63ef2dd2e76c3a199fb84de0b4608ace4e0b",
+    "03967e84fd936a3604360df7c39d0c94bcd9a72f327f0019dca34e196931c50be2ff10b93d1304866f400961c2bd921a02ad16e1f6c2f0966e5640a1651ad70f"
+  ]
 ]
 ```
 
@@ -227,9 +258,14 @@ const signature = TurtleCoinCrypo.generateSignature(
 )
 ```
 
-Returns the signature generated from the supplied values. Ex:
+Returns an array of [err, signature]; ex.
 
-`521028ce6bdc4a43cb4089433594360a6a843cdd72f2db292409e4bf6d7a7209ece1583e2c5db774f5986d1116c7c2291edecc7aeacf5cbe2f2e42d1d1cc1a0d`
+```javascript
+[
+  false,
+  "521028ce6bdc4a43cb4089433594360a6a843cdd72f2db292409e4bf6d7a7209ece1583e2c5db774f5986d1116c7c2291edecc7aeacf5cbe2f2e42d1d1cc1a0d"
+]
+```
 
 ## underivePublicKey(derivation, outputIndex, derivedKey)
 
@@ -246,9 +282,14 @@ const publicKey = TurtleCoinCrypto.underivePublicKey(
 )
 ```
 
-Returns the underived public key of the supplied values: Ex.
+Returns an array of [err, key]; ex.
 
-`854a637b2863af9e8e8216eb2382f3d16616b3ac3e53d0976fbd6f8da6c56418`
+```javascript
+[
+  false,
+  "854a637b2863af9e8e8216eb2382f3d16616b3ac3e53d0976fbd6f8da6c56418"
+]
+```
 
 # Hashing Algorithms
 
@@ -262,56 +303,14 @@ const data =
 const hash = TurtleCoinCrypto.cnFastHash(data)
 ```
 
-Returns the hash of the supplied data. Ex:
-
-`143416ef9aa00ba73a79b4847062a2574b754dcb297bed37c60dc095819cc309`
-
-## cn_turtle_lite_slow_hash_v0(data)
-
-Performs the cn_turtle_lite_slow_hash_v0 function against the data
+Returns an array of [err, hash]; ex.
 
 ```javascript
-const data =
-  '0100fb8e8ac805899323371bb790db19218afd8db8e3755d8b90f39b3d5506a9abce4fa912244500'
-const hash = TurtleCoinCrypto.cn_turtle_lite_slow_hash_v0(data)
+[
+  false,
+  "143416ef9aa00ba73a79b4847062a2574b754dcb297bed37c60dc095819cc309"
+]
 ```
-
-Returns the hash of the supplied data. Ex:
-
-`a63000509161816b46a92c97615707bd1b409eec42ca7780e13956ca445cf65b`
-
-## cn_turtle_lite_slow_hash_v1(data)
-
-Performs the cn_turtle_lite_slow_hash_v1 function against the data
-
-*Requires >= 43 bytes of data*
-
-```javascript
-const data =
-  '0100fb8e8ac805899323371bb790db19218afd8db8e3755d8b90f39b3d5506a9abce4fa912244500323443'
-const hash = TurtleCoinCrypto.cn_turtle_lite_slow_hash_v1(data)
-```
-
-Returns the hash of the supplied data. Ex:
-
-`0ebed0c54f75f9cee9fdec55d37f6e3a7534e0f03e526368695197904d742355`
-
-## cn_turtle_lite_slow_hash_v2(data)
-
-Performs the cn_turtle_lite_slow_hash_v2 function against the data
-
-*Requires >= 43 bytes of data*
-
-```javascript
-const data =
-  '0100fb8e8ac805899323371bb790db19218afd8db8e3755d8b90f39b3d5506a9abce4fa912244500323443'
-const hash = TurtleCoinCrypto.cn_turtle_lite_slow_hash_v2(data)
-```
-
-Returns the hash of the supplied data. Ex:
-
-`6cf941d7d4764064ba752ed986bf4d1d33b52ab9ddf477cda827425234befcb8`
-
 
 ## License
 
